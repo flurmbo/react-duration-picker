@@ -8,36 +8,43 @@ function App(props) {
     minutes: 0,
     seconds: 0
   });
+  const [isOpen, setIsOpen] = useState(false);
   const onChange = newDuration => {
     setDuration(newDuration);
   };
   const { hours, minutes, seconds } = duration;
   return (
-    <div>
+    <React.Fragment>
+      <h1>React Duration Picker</h1>
+      Hook based React component for picking durations of time. Inspired by
+      Android number pickers.
+      <h2>Example</h2>
+      <button onClick={() => setIsOpen(true)}>Select Duration</button>
       <ReactModal
-        isOpen={true}
-        contentLabel="Minimal Modal Example"
+        isOpen={isOpen}
+        contentLabel="Select Duration"
         style={{
+          overlay: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          },
           content: {
-            width: 500,
-            height: 500,
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            marginLeft: -250,
-            marginTop: -250
+            position: "static"
           }
         }}
       >
         <div>
           <DurationPicker onChange={onChange} />
         </div>
-        <button>Close Modal</button>
+        <button onClick={() => setIsOpen(false)} style={{ float: "right" }}>
+          Select duration
+        </button>
       </ReactModal>
       <div>
         {`You have selected the numbers ${hours}, ${minutes}, and ${seconds}.`}
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 
