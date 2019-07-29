@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 const CELL_HEIGHT = 35;
 const NUM_CELLS = 20;
 const MIDDLE_CELL = NUM_CELLS / 2;
-const DECCELERATION_COEFFICIENT = 0.2;
+// const DECCELERATION_COEFFICIENT = 0.2;
 
 DurationPickerColumn.propTypes = {
   onChange: PropTypes.func

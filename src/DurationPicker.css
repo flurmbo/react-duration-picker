@@ -31,6 +31,20 @@ body {
   overflow: hidden;
   height: 105px;
   position: relative;
+  mask-image: linear-gradient(
+    transparent,
+    10%,
+    rgba(0, 0, 0, 1),
+    90%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    transparent,
+    10%,
+    rgba(0, 0, 0, 1),
+    90%,
+    transparent
+  );
 }
 
 .column {
