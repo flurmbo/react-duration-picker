@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-DurationPickerColumn.propTypes = {
-  hasReticules: PropTypes.bool
-};
 const CELL_HEIGHT = 35;
 const NUM_CELLS = 20;
 const MIDDLE_CELL = NUM_CELLS / 2;
 const DECCELERATION_COEFFICIENT = 0.2;
+
+DurationPickerColumn.propTypes = {
+  onChange: PropTypes.func
+};
 
 function DurationPickerColumn(props) {
   function handleSlideColumn(newOffset) {
@@ -43,16 +44,16 @@ function DurationPickerColumn(props) {
     const position = e.clientY;
     handleSlideColumn(offsetState.offset + position - lastClientY);
     setLastClientY(position);
-    setCursorData(prevCursorData => {
-      const now = Date.now();
-      return {
-        now,
-        position,
-        speed:
-          (2 * (position - prevCursorData.position)) /
-          (now - prevCursorData.now)
-      };
-    });
+    // setCursorData(prevCursorData => {
+    //   const now = Date.now();
+    //   return {
+    //     now,
+    //     position,
+    //     speed:
+    //       (2 * (position - prevCursorData.position)) /
+    //       (now - prevCursorData.now)
+    //   };
+    // });
   }
 
   function pointerEnterHandler(e) {
@@ -95,6 +96,7 @@ function DurationPickerColumn(props) {
     }));
   }
 
+  // ********* STATE VARIABLES ********* //
   const [offsetState, setOffsetState] = useState(() => {
     const numbers = [];
     for (let i = 0; i < NUM_CELLS; i++) {
@@ -106,13 +108,14 @@ function DurationPickerColumn(props) {
       cellContents: numbers
     };
   });
+
   const [slideyRectHeight, setSlideyRectHeight] = useState(undefined);
   const [lastClientY, setLastClientY] = useState(undefined);
-  const [cursorData, setCursorData] = useState({
-    time: 0,
-    position: 0,
-    speed: 0
-  });
+  // const [cursorData, setCursorData] = useState({
+  //   time: 0,
+  //   position: 0,
+  //   speed: 0
+  // });
   const currentSelectionRef = useRef();
 
   // set up initial position configuration of slidey and measure slidey
@@ -130,7 +133,7 @@ function DurationPickerColumn(props) {
     const boundingClientRect = slideyRef.current.getBoundingClientRect();
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
   }, []);
-
+  const { onChange } = props;
   useEffect(() => {
     // when offset config is changed, update current selection
     const currentSelection = getCurrentSelection(
@@ -139,8 +142,9 @@ function DurationPickerColumn(props) {
     );
     if (currentSelectionRef.current !== currentSelection) {
       currentSelectionRef.current = currentSelection;
+      onChange(currentSelection);
     }
-  }, [offsetState]);
+  }, [offsetState, onChange]);
 
   const cells = offsetState.cellContents.map(value => {
     if (value === MIDDLE_CELL) {
@@ -173,13 +177,12 @@ function DurationPickerColumn(props) {
       onPointerEnter={pointerEnterHandler}
       // onPointerLeave={pointerLeaveHandler}
       onPointerLeave={pointerLeaveHandler}
+      onClick={props.onClick}
     >
-      {props.hasReticules && (
-        <React.Fragment>
-          <hr className="reticule" style={{ top: CELL_HEIGHT }} />
-          <hr className="reticule" style={{ top: CELL_HEIGHT * 2 }} />
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        <hr className="reticule" style={{ top: CELL_HEIGHT - 1 }} />
+        <hr className="reticule" style={{ top: CELL_HEIGHT * 2 - 1 }} />
+      </React.Fragment>
       <div
         className="column"
         style={{ top: offsetState.offset || 0 }}

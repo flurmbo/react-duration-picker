@@ -16,12 +16,15 @@ module.exports = [
           test: /\.js|jsx$/,
           include: path.resolve(__dirname, "src"),
           exclude: /(node_modules|build)/,
-          use: {
-            loader: "babel-loader",
-            options: {
-              presets: ["@babel/preset-env"]
-            }
-          }
+          use: [
+            {
+              loader: "babel-loader",
+              options: {
+                presets: ["@babel/preset-env"]
+              }
+            },
+            { loader: "eslint-loader" }
+          ]
         },
         {
           test: /\.css$/,
@@ -54,12 +57,15 @@ module.exports = [
             path.resolve(__dirname, "src")
           ],
           exclude: /(node_modules|build)/,
-          use: {
-            loader: "babel-loader",
-            options: {
-              presets: ["@babel/preset-env"]
-            }
-          }
+          use: [
+            {
+              loader: "babel-loader",
+              options: {
+                presets: ["@babel/preset-env"]
+              }
+            },
+            { loader: "eslint-loader" }
+          ]
         },
         {
           test: /\.css$/,

@@ -6,6 +6,7 @@
   user-select: none;
   border-style: solid;
   border-width: thin;
+  height: 105px;
 }
 
 #root {
@@ -47,7 +48,7 @@ body {
   left: 50%;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  border-color: rgba(109, 202, 236);
+  border-color: rgba(109, 202, 236, 1);
 }
 
 .cell {
@@ -56,9 +57,29 @@ body {
 
 .cellOdd {
   text-align: center;
-  background-color: rgba(200, 200, 200, 0.5);
+  /* background-color: rgba(200, 200, 200, 0.5); */
 }
 
 .cellMiddle {
   text-align: center;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
