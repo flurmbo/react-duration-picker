@@ -1,0 +1,64 @@
+.picker {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  display: inline-block;
+  user-select: none;
+  border-style: solid;
+  border-width: thin;
+}
+
+#root {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.columnContainer {
+  color: black;
+  display: inline-block;
+  width: 100px;
+  border-color: black;
+  font-size: 30px;
+  touch-action: none;
+  overflow: hidden;
+  height: 105px;
+  position: relative;
+}
+
+.column {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  width: 100%;
+}
+
+.reticule {
+  position: absolute;
+  width: 80%;
+  margin: 0;
+  z-index: 100;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  border-color: rgba(109, 202, 236);
+}
+
+.cell {
+  text-align: center;
+}
+
+.cellOdd {
+  text-align: center;
+  background-color: rgba(200, 200, 200, 0.5);
+}
+
+.cellMiddle {
+  text-align: center;
+}
