@@ -6,7 +6,7 @@ Currently you'll have to clone the repository yourself from Github. In the futur
 
 # Usage
 
-```
+```javascript
 import DurationPicker from "DurationPicker";
 ...
 return (
