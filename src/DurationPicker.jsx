@@ -14,16 +14,19 @@ function DurationPicker(props) {
         onChange={hours =>
           props.onChange(prevDuration => ({ ...prevDuration, hours }))
         }
+        unit="hours"
       />
       <DurationPickerColumn
         onChange={minutes =>
           props.onChange(prevDuration => ({ ...prevDuration, minutes }))
         }
+        unit="mins"
       />
       <DurationPickerColumn
         onChange={seconds =>
           props.onChange(prevDuration => ({ ...prevDuration, seconds }))
         }
+        unit="secs"
       />
     </div>
   );

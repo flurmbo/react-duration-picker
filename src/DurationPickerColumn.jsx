@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+import { toTwoDigitString } from "./utils";
 const CELL_HEIGHT = 35;
 const NUM_CELLS = 20;
 const MIDDLE_CELL = NUM_CELLS / 2;
 // const DECCELERATION_COEFFICIENT = 0.2;
 
 DurationPickerColumn.propTypes = {
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  unit: PropTypes.oneOf(["hours", "mins", "secs"])
 };
 
 function DurationPickerColumn(props) {
@@ -147,19 +149,11 @@ function DurationPickerColumn(props) {
   }, [offsetState, onChange]);
 
   const cells = offsetState.cellContents.map(value => {
-    if (value === MIDDLE_CELL) {
-      return (
-        <div className="cellMiddle" key={value}>
-          {value}
-        </div>
-      );
-    } else {
-      return (
-        <div className={value % 2 === 0 ? "cell" : "cellOdd"} key={value}>
-          {value}
-        </div>
-      );
-    }
+    return (
+      <div className="cell" key={value}>
+        {toTwoDigitString(value)}
+      </div>
+    );
   });
   if (
     currentSelectionRef.current !==
@@ -182,6 +176,10 @@ function DurationPickerColumn(props) {
       <React.Fragment>
         <hr className="reticule" style={{ top: CELL_HEIGHT - 1 }} />
         <hr className="reticule" style={{ top: CELL_HEIGHT * 2 - 1 }} />
+        <div className="textOverlay" style={{ top: CELL_HEIGHT }}>
+          {`${toTwoDigitString(currentSelectionRef.current)}`}
+          <div className="foo">{props.unit}</div>
+        </div>
       </React.Fragment>
       <div
         className="column"

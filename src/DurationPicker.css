@@ -4,17 +4,13 @@
   -ms-user-select: none;
   display: inline-block;
   user-select: none;
-  border-style: solid;
-  border-width: thin;
   height: 105px;
 }
 
 .columnContainer {
   color: black;
   display: inline-block;
-  width: 100px;
-  border-color: black;
-  font-size: 30px;
+  width: 110px;
   touch-action: none;
   overflow: hidden;
   height: 105px;
@@ -52,18 +48,34 @@
   transform: translateX(-50%);
   border-color: rgba(109, 202, 236, 1);
 }
-
+.foo {
+  font-size: 17px;
+  position: relative;
+  top: 1px;
+  left: 1px;
+  color: gray;
+  width: 0px;
+  font-style: italic;
+}
+.textOverlay {
+  position: absolute;
+  /* font-style: italic; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  font-size: 20px;
+  color: white;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
 .cell {
-  text-align: center;
-}
-
-.cellOdd {
-  text-align: center;
-  /* background-color: rgba(200, 200, 200, 0.5); */
-}
-
-.cellMiddle {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  font-size: 20px;
 }
 
 body {
