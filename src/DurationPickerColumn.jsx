@@ -166,12 +166,13 @@ function DurationPickerColumn(props) {
   return (
     <div
       className="columnContainer"
-      onPointerMove={pointerMoveHandler}
       ref={containerRef}
-      onPointerEnter={pointerEnterHandler}
-      // onPointerLeave={pointerLeaveHandler}
-      onPointerLeave={pointerLeaveHandler}
-      onClick={props.onClick}
+      // onTouchMove={pointerMoveHandler}
+      // onTouchStart={pointerEnterHandler}
+      // onTouchEnd={pointerLeaveHandler}
+      onTouchMove={() => console.log(`move`)}
+      onTouchStart={() => console.log(`start`)}
+      onTouchEnd={() => console.log(`end`)}
     >
       <React.Fragment>
         <hr className="reticule" style={{ top: CELL_HEIGHT - 1 }} />
