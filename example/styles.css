@@ -1,4 +1,15 @@
+html {
+  height: 100%;
+}
+
 body {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+#root {
   max-width: 800px;
   margin: 0 auto;
 }
