@@ -1,4 +1,4 @@
-React duration picker for mobile, inspired by Android spinners
+React duration picker for mobile, inspired by Android number pickers.
 
 # Installation
 
