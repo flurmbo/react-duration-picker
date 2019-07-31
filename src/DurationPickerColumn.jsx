@@ -4,7 +4,6 @@ import { toTwoDigitString } from "./utils";
 const CELL_HEIGHT = 35;
 const NUM_CELLS = 20;
 const MIDDLE_CELL = NUM_CELLS / 2;
-// const DECCELERATION_COEFFICIENT = 0.2;
 
 DurationPickerColumn.propTypes = {
   onChange: PropTypes.func,
@@ -42,24 +41,17 @@ function DurationPickerColumn(props) {
   const slideyRef = useRef(null);
   const containerRef = useRef(null);
 
-  function pointerMoveHandler(e) {
-    const position = e.clientY;
+  function moveHandler(e) {
+    e.preventDefault();
+    const position = e.touches[0].clientY;
     handleSlideColumn(offsetState.offset + position - lastClientY);
     setLastClientY(position);
-    // setCursorData(prevCursorData => {
-    //   const now = Date.now();
-    //   return {
-    //     now,
-    //     position,
-    //     speed:
-    //       (2 * (position - prevCursorData.position)) /
-    //       (now - prevCursorData.now)
-    //   };
-    // });
   }
 
-  function pointerEnterHandler(e) {
-    setLastClientY(e.clientY);
+  function startHandler(e) {
+    e.preventDefault();
+    setLastClientY(e.touches[0].clientY);
+    console.log(e.touches[0].clientY);
   }
   function getCurrentSelection(offset, numbers) {
     return numbers[Math.abs(Math.round(offset / CELL_HEIGHT)) + 1];
@@ -68,29 +60,12 @@ function DurationPickerColumn(props) {
     return Math.abs(Math.round(offset / CELL_HEIGHT)) + 1;
   }
 
-  // function pointerLeaveHandler(e) {
-  //   // console.log(cursorData.speed);
-  //   let { speed } = cursorData;
-  //   const interval = setInterval(() => {
-  //     setOffset((prevOffset) => prevOffset + speed);
-  //     speed = speed - DECCELERATION_COEFFICIENT;
-  //     if (speed < 0) {
-  //       clearInterval(interval);
-  //     }
-  //   }, 30);
-  // }
-
-  function pointerLeaveHandler(e) {
+  function endHandler(e) {
+    e.preventDefault();
     // slowly slide to align current selection to center
     const currentSelectionIndex = getCurrentSelectionIndex(
       offsetState.offset,
       offsetState.cellContents
-    );
-    console.log(`aligning slider to ${currentSelectionIndex}`);
-    console.log(
-      `current offset: ${
-        offsetState.offset
-      } new offset: ${currentSelectionIndex * CELL_HEIGHT}`
     );
     setOffsetState(prevOffsetState => ({
       ...prevOffsetState,
@@ -113,11 +88,6 @@ function DurationPickerColumn(props) {
 
   const [slideyRectHeight, setSlideyRectHeight] = useState(undefined);
   const [lastClientY, setLastClientY] = useState(undefined);
-  // const [cursorData, setCursorData] = useState({
-  //   time: 0,
-  //   position: 0,
-  //   speed: 0
-  // });
   const currentSelectionRef = useRef();
 
   // set up initial position configuration of slidey and measure slidey
@@ -155,24 +125,13 @@ function DurationPickerColumn(props) {
       </div>
     );
   });
-  if (
-    currentSelectionRef.current !==
-    getCurrentSelection(offsetState.offset, offsetState.cellContents)
-  ) {
-    console.log(
-      getCurrentSelection(offsetState.offset, offsetState.cellContents)
-    );
-  }
   return (
     <div
       className="columnContainer"
       ref={containerRef}
-      // onTouchMove={pointerMoveHandler}
-      // onTouchStart={pointerEnterHandler}
-      // onTouchEnd={pointerLeaveHandler}
-      onTouchMove={() => console.log(`move`)}
-      onTouchStart={() => console.log(`start`)}
-      onTouchEnd={() => console.log(`end`)}
+      onTouchMove={moveHandler}
+      onTouchStart={startHandler}
+      onTouchEnd={endHandler}
     >
       <React.Fragment>
         <hr className="reticule" style={{ top: CELL_HEIGHT - 1 }} />

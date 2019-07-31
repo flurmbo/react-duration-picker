@@ -34,6 +34,7 @@
 .column {
   position: absolute;
   pointer-events: none;
+  touch-action: none;
   z-index: 0;
   width: 100%;
 }
