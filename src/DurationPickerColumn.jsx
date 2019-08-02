@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { toTwoDigitString } from "./utils";
 const CELL_HEIGHT = 35;
@@ -30,45 +30,53 @@ function DurationPickerColumn(props) {
   const offsetStateRef = useRef(offsetState);
   const slideyRef = useRef(null);
   const containerRef = useRef(null);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const isMouseDownRef = useRef(false);
+  const lastClientYRef = useRef(undefined);
 
-  function handleSlideColumn(newOffset) {
-    const slideyRect = slideyRef.current.getBoundingClientRect();
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const middleOfContainer = (containerRect.bottom + containerRect.top) / 2;
-    const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top;
-    const proportion = middleOfVisibleSlideyBit / slideyRectHeight;
-    if (proportion >= 0.75 || proportion <= 0.25) {
-      setOffsetState(prevOffsetState => {
-        return {
-          offset:
-            newOffset + ((proportion >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
-          inA: !prevOffsetState.inA,
-          cellContents: [
-            ...prevOffsetState.cellContents.slice(MIDDLE_CELL, NUM_CELLS),
-            ...prevOffsetState.cellContents.slice(0, MIDDLE_CELL)
-          ]
-        };
-      });
-    } else {
-      setOffsetState(prevOffsetState => ({
-        offset: newOffset,
-        inA: prevOffsetState.inA,
-        cellContents: prevOffsetState.cellContents
-      }));
-    }
-  }
+  const moveHandler = useCallback(
+    e => {
+      function handleSlideColumn(newOffset) {
+        const slideyRect = slideyRef.current.getBoundingClientRect();
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const middleOfContainer =
+          (containerRect.bottom + containerRect.top) / 2;
+        const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top;
+        const proportion = middleOfVisibleSlideyBit / slideyRectHeight;
+        if (proportion >= 0.75 || proportion <= 0.25) {
+          setOffsetState(prevOffsetState => {
+            return {
+              offset:
+                newOffset +
+                ((proportion >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
+              inA: !prevOffsetState.inA,
+              cellContents: [
+                ...prevOffsetState.cellContents.slice(MIDDLE_CELL, NUM_CELLS),
+                ...prevOffsetState.cellContents.slice(0, MIDDLE_CELL)
+              ]
+            };
+          });
+        } else {
+          setOffsetState(prevOffsetState => ({
+            offset: newOffset,
+            inA: prevOffsetState.inA,
+            cellContents: prevOffsetState.cellContents
+          }));
+        }
+      }
 
-  function moveHandler(e) {
-    const { offset } = offsetStateRef.current;
-    e.preventDefault();
-    const position = e.touches[0].clientY;
-    handleSlideColumn(offset + position - lastClientY);
-    setLastClientY(position);
-  }
-
+      console.log(`lastClientY is ${lastClientYRef.current}`);
+      const { offset } = offsetStateRef.current;
+      e.preventDefault();
+      const position = e.touches ? e.touches[0].clientY : e.clientY;
+      handleSlideColumn(offset + position - lastClientYRef.current);
+      setLastClientY(position);
+    },
+    [slideyRectHeight]
+  );
   function startHandler(e) {
     e.preventDefault();
-    setLastClientY(e.touches[0].clientY);
+    setLastClientY(e.touches ? e.touches[0].clientY : e.clientY);
   }
 
   function getCurrentSelection(offset, numbers) {
@@ -89,7 +97,10 @@ function DurationPickerColumn(props) {
     }));
   }
 
-  function mouseDownHandler(e) {}
+  function mouseDownHandler(e) {
+    startHandler(e);
+    setIsMouseDown(true);
+  }
   // set up initial position configuration of slidey and measure slidey
   useEffect(() => {
     function getInitialOffset(slideyElem) {
@@ -105,6 +116,7 @@ function DurationPickerColumn(props) {
     const boundingClientRect = slideyRef.current.getBoundingClientRect();
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
   }, []);
+
   const { onChange } = props;
   useEffect(() => {
     // when offset config is changed, update current selection
@@ -118,6 +130,18 @@ function DurationPickerColumn(props) {
     }
     offsetStateRef.current = offsetState;
   }, [offsetState, onChange]);
+
+  useEffect(() => {
+    lastClientYRef.current = lastClientY;
+  }, [lastClientY]);
+  useEffect(() => {
+    if (isMouseDown && !isMouseDownRef.current) {
+      // mouse just depressed
+      console.log("adding an event listener");
+      window.addEventListener("mousemove", moveHandler);
+    }
+    isMouseDownRef.current = isMouseDown;
+  }, [isMouseDown, moveHandler]);
 
   const cells = offsetState.cellContents.map(value => {
     return (
