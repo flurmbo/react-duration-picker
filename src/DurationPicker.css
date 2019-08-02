@@ -2,15 +2,16 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  display: inline-block;
+  display: flex;
   user-select: none;
   height: 105px;
+  width: 330px;
 }
 
 .columnContainer {
+  flex-grow: 1;
   color: black;
   display: inline-block;
-  width: 110px;
   touch-action: none;
   overflow: hidden;
   height: 105px;
