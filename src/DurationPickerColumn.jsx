@@ -65,7 +65,6 @@ function DurationPickerColumn(props) {
         }
       }
 
-      console.log(`lastClientY is ${lastClientYRef.current}`);
       const { offset } = offsetStateRef.current;
       e.preventDefault();
       const position = e.touches ? e.touches[0].clientY : e.clientY;
@@ -86,7 +85,7 @@ function DurationPickerColumn(props) {
     return Math.abs(Math.round(offset / CELL_HEIGHT)) + 1;
   }
 
-  function endHandler(e) {
+  const endHandler = useCallback(e => {
     e.preventDefault();
     const { offset } = offsetStateRef.current;
     // slowly slide to align current selection to center
@@ -95,7 +94,7 @@ function DurationPickerColumn(props) {
       ...prevOffsetState,
       offset: -1 * (currentSelectionIndex - 1) * CELL_HEIGHT
     }));
-  }
+  }, []);
 
   function mouseDownHandler(e) {
     startHandler(e);
@@ -115,7 +114,7 @@ function DurationPickerColumn(props) {
     }));
     const boundingClientRect = slideyRef.current.getBoundingClientRect();
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
-  }, []);
+  }, [slideyRectHeight]);
 
   const { onChange } = props;
   useEffect(() => {
@@ -137,11 +136,17 @@ function DurationPickerColumn(props) {
   useEffect(() => {
     if (isMouseDown && !isMouseDownRef.current) {
       // mouse just depressed
-      console.log("adding an event listener");
       window.addEventListener("mousemove", moveHandler);
+      const mouseUpHandler = e => {
+        endHandler(e);
+        setIsMouseDown(false);
+        window.removeEventListener("mousemove", moveHandler);
+        window.removeEventListener("mouseup", mouseUpHandler);
+      };
+      window.addEventListener("mouseup", mouseUpHandler);
     }
     isMouseDownRef.current = isMouseDown;
-  }, [isMouseDown, moveHandler]);
+  }, [isMouseDown, moveHandler, endHandler]);
 
   const cells = offsetState.cellContents.map(value => {
     return (
