@@ -35,7 +35,11 @@ function App(props) {
         }}
       >
         <div>
-          <DurationPicker onChange={onChange} />
+          <DurationPicker
+            onChange={onChange}
+            initialDuration={{ hours: 0, minutes: 0, seconds: 0 }}
+            maxHours={9}
+          />
         </div>
         <button onClick={() => setIsOpen(false)} style={{ float: "right" }}>
           Select duration

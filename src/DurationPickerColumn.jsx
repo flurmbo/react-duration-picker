@@ -2,17 +2,19 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { toTwoDigitString } from "./utils";
 const CELL_HEIGHT = 35;
-const NUM_CELLS = 20;
-const MIDDLE_CELL = NUM_CELLS / 2;
 
 DurationPickerColumn.propTypes = {
   onChange: PropTypes.func,
   unit: PropTypes.oneOf(["hours", "mins", "secs"]),
-  isSmallScreen: PropTypes.bool
+  isSmallScreen: PropTypes.bool,
+  maxHours: PropTypes.number
 };
 
 function DurationPickerColumn(props) {
-  // ********* STATE VARIABLES ********* //
+  // ********* STATE VARIABLES, PROPS, REFS ********* //
+  const { onChange, isSmallScreen, unit, maxHours } = props;
+  const NUM_CELLS = unit === "hours" && maxHours ? maxHours : 60;
+  const MIDDLE_CELL = NUM_CELLS / 2;
   const [offsetState, setOffsetState] = useState(() => {
     const numbers = [];
     for (let i = 0; i < NUM_CELLS; i++) {
@@ -117,7 +119,6 @@ function DurationPickerColumn(props) {
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
   }, [slideyRectHeight]);
 
-  const { onChange, isSmallScreen } = props;
   useEffect(() => {
     // when offset config is changed, update current selection
     const currentSelection = getCurrentSelection(
@@ -170,9 +171,7 @@ function DurationPickerColumn(props) {
         <hr className="reticule" style={{ top: CELL_HEIGHT * 2 - 1 }} />
         <div className="textOverlay" style={{ top: CELL_HEIGHT }}>
           {`${toTwoDigitString(currentSelectionRef.current)}`}
-          <div className="foo">
-            {isSmallScreen ? props.unit[0] : props.unit}
-          </div>
+          <div className="foo">{isSmallScreen ? unit[0] : unit}</div>
         </div>
       </React.Fragment>
       <div
