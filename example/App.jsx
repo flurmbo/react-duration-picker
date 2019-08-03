@@ -21,7 +21,6 @@ function App(props) {
       <h2>Example</h2>
       <button onClick={() => setIsOpen(true)}>Select Duration</button>
       <ReactModal
-        id={"thisisit"}
         isOpen={isOpen}
         contentLabel="Select Duration"
         style={{
