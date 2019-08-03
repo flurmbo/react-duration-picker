@@ -8,6 +8,12 @@
   width: 330px;
 }
 
+@media (max-width: 400px) {
+  .picker {
+    width: 250px;
+  }
+}
+
 .columnContainer {
   flex-grow: 1;
   color: black;
