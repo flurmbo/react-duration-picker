@@ -1,3 +1,18 @@
 {
-  "extends": "react-app"
+  "env": {
+    "browser": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-use-before-define": ["off"],
+    "import/no-extraneous-dependencies": ["off"],
+    "react/jsx-filename-extension": ["off"]
+  },
+  "extends": ["airbnb", "prettier"]
 }

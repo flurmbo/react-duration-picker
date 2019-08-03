@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import DurationPicker from "../src/DurationPicker";
 import ReactModal from "react-modal";
+import DurationPicker from "../src/DurationPicker";
+
 ReactModal.setAppElement("#root");
-function App(props) {
+function App() {
   const [duration, setDuration] = useState({
     hours: 0,
     minutes: 0,
@@ -19,7 +20,9 @@ function App(props) {
       Hook based React component for picking durations of time. Inspired by
       Android number pickers.
       <h2>Example</h2>
-      <button onClick={() => setIsOpen(true)}>Select Duration</button>
+      <button onClick={() => setIsOpen(true)} type="button">
+        Select Duration
+      </button>
       <ReactModal
         isOpen={isOpen}
         contentLabel="Select Duration"
@@ -41,7 +44,11 @@ function App(props) {
             maxHours={9}
           />
         </div>
-        <button onClick={() => setIsOpen(false)} style={{ float: "right" }}>
+        <button
+          onClick={() => setIsOpen(false)}
+          type="button"
+          style={{ float: "right" }}
+        >
           Select duration
         </button>
       </ReactModal>

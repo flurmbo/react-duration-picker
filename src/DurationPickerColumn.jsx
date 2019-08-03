@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { toTwoDigitString } from "./utils";
+
 const CELL_HEIGHT = 35;
 
 DurationPickerColumn.propTypes = {
-  onChange: PropTypes.func,
-  unit: PropTypes.oneOf(["hours", "mins", "secs"]),
-  isSmallScreen: PropTypes.bool,
-  maxHours: PropTypes.number
+  onChange: PropTypes.func.isRequired,
+  unit: PropTypes.oneOf(["hours", "mins", "secs"]).isRequired,
+  isSmallScreen: PropTypes.bool.isRequired,
+  maxHours: PropTypes.number.isRequired
 };
 
 function DurationPickerColumn(props) {
@@ -165,6 +166,11 @@ function DurationPickerColumn(props) {
       onTouchStart={startHandler}
       onTouchEnd={endHandler}
       onMouseDown={mouseDownHandler}
+      role="slider"
+      aria-valuemax={199999}
+      aria-valuemin={0}
+      aria-valuenow={currentSelectionRef.current}
+      tabIndex={0}
     >
       <React.Fragment>
         <hr className="reticule" style={{ top: CELL_HEIGHT - 1 }} />

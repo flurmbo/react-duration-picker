@@ -5,12 +5,22 @@ import DurationPickerColumn from "./DurationPickerColumn";
 
 DurationPicker.propTypes = {
   onChange: PropTypes.func,
-  initialDuration: PropTypes.object,
+  initialDuration: PropTypes.shape({
+    hours: PropTypes.number,
+    mins: PropTypes.number,
+    secs: PropTypes.number
+  }),
   maxHours: PropTypes.number
 };
 
+DurationPicker.defaultProps = {
+  maxHours: 10,
+  onChange: () => {},
+  initialDuration: { hours: 0, mins: 0, secs: 0 }
+};
+
 function DurationPicker(props) {
-  const { onChange, initialDuration, maxHours } = props;
+  const { onChange, maxHours } = props;
   const [isSmallScreen, setIsSmallScreen] = useState(undefined);
   useEffect(() => {
     const resizeHandler = () => {

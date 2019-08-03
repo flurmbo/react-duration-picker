@@ -1,9 +1,11 @@
 function toTwoDigitString(number) {
   if (number < 10) {
     return `0${number}`;
-  } else {
-    return `${number}`;
   }
+  return `${number}`;
 }
 
-export { toTwoDigitString };
+function otherFunction() {
+  console.log("himom");
+}
+export { toTwoDigitString, otherFunction };
