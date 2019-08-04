@@ -8,15 +8,15 @@ DurationPicker.propTypes = {
   initialDuration: PropTypes.shape({
     hours: PropTypes.number,
     mins: PropTypes.number,
-    secs: PropTypes.number
+    secs: PropTypes.number,
   }),
-  maxHours: PropTypes.number
+  maxHours: PropTypes.number,
 };
 
 DurationPicker.defaultProps = {
   maxHours: 10,
   onChange: () => {},
-  initialDuration: { hours: 0, mins: 0, secs: 0 }
+  initialDuration: { hours: 0, mins: 0, secs: 0 },
 };
 
 function DurationPicker(props) {
