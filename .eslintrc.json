@@ -12,7 +12,8 @@
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "no-use-before-define": ["off"],
     "import/no-extraneous-dependencies": ["off"],
-    "react/jsx-filename-extension": ["off"]
+    "react/jsx-filename-extension": ["off"],
+    "no-unused-vars": ["warn"]
   },
   "extends": ["airbnb", "prettier"]
 }

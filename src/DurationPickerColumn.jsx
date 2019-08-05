@@ -7,10 +7,13 @@ const CELL_HEIGHT = 35;
 DurationPickerColumn.propTypes = {
   onChange: PropTypes.func.isRequired,
   unit: PropTypes.oneOf(["hours", "mins", "secs"]).isRequired,
-  isSmallScreen: PropTypes.bool.isRequired,
-  maxHours: PropTypes.number.isRequired
+  isSmallScreen: PropTypes.bool,
+  maxHours: PropTypes.number.isRequired,
 };
 
+DurationPickerColumn.defaultProps = {
+  isSmallScreen: undefined,
+};
 function DurationPickerColumn(props) {
   // ********* STATE VARIABLES, PROPS, REFS ********* //
   const { onChange, isSmallScreen, unit, maxHours } = props;
@@ -24,19 +27,20 @@ function DurationPickerColumn(props) {
     return {
       offset: 0,
       inA: true,
-      cellContents: numbers
+      cellContents: numbers,
     };
   });
 
   const [slideyRectHeight, setSlideyRectHeight] = useState(undefined);
   const [lastClientY, setLastClientY] = useState(undefined);
+  const lastClientYRef = useRef(undefined);
   const currentSelectionRef = useRef();
   const offsetStateRef = useRef(offsetState);
   const slideyRef = useRef(null);
   const containerRef = useRef(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const isMouseDownRef = useRef(false);
-  const lastClientYRef = useRef(undefined);
+  const [isColumnFocused, setIsColumnFocused] = useState(false);
 
   const moveHandler = useCallback(
     e => {
@@ -56,15 +60,15 @@ function DurationPickerColumn(props) {
               inA: !prevOffsetState.inA,
               cellContents: [
                 ...prevOffsetState.cellContents.slice(MIDDLE_CELL, NUM_CELLS),
-                ...prevOffsetState.cellContents.slice(0, MIDDLE_CELL)
-              ]
+                ...prevOffsetState.cellContents.slice(0, MIDDLE_CELL),
+              ],
             };
           });
         } else {
           setOffsetState(prevOffsetState => ({
             offset: newOffset,
             inA: prevOffsetState.inA,
-            cellContents: prevOffsetState.cellContents
+            cellContents: prevOffsetState.cellContents,
           }));
         }
       }
@@ -96,14 +100,28 @@ function DurationPickerColumn(props) {
     const currentSelectionIndex = getCurrentSelectionIndex(offset);
     setOffsetState(prevOffsetState => ({
       ...prevOffsetState,
-      offset: -1 * (currentSelectionIndex - 1) * CELL_HEIGHT
+      offset: -1 * (currentSelectionIndex - 1) * CELL_HEIGHT,
     }));
   }, []);
 
-  function mouseDownHandler(e) {
+  const mouseDownHandler = e => {
     startHandler(e);
     setIsMouseDown(true);
-  }
+  };
+
+  const keyDownHandler = e => {
+    console.log(`key down and key is ${e.code}`);
+  };
+
+  const focusInHandler = () => {
+    window.addEventListener("keydown", keyDownHandler);
+    setIsColumnFocused(true);
+  };
+
+  const focusOutHandler = () => {
+    window.removeEventListener("keydown", keyDownHandler);
+  };
+
   // set up initial position configuration of slidey and measure slidey
   useEffect(() => {
     function getInitialOffset(slideyElem) {
@@ -114,11 +132,23 @@ function DurationPickerColumn(props) {
     setOffsetState(prevOffsetState => ({
       offset: -1 * getInitialOffset(slideyRef.current),
       inA: true,
-      cellContents: prevOffsetState.cellContents
+      cellContents: prevOffsetState.cellContents,
     }));
     const boundingClientRect = slideyRef.current.getBoundingClientRect();
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
   }, [slideyRectHeight]);
+
+  // set up and teardown listeners for keyboard input
+  useEffect(() => {
+    const container = containerRef.current;
+    container.addEventListener("focusin", focusInHandler);
+    container.addEventListener("focusout", focusOutHandler);
+    return () => {
+      container.removeEventListener("focusin", focusInHandler);
+      container.removeEventListener("focusout", focusOutHandler);
+      window.removeEventListener("keydown", keyDownHandler);
+    };
+  }, []);
 
   useEffect(() => {
     // when offset config is changed, update current selection

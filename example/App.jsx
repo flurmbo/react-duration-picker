@@ -7,7 +7,7 @@ function App() {
   const [duration, setDuration] = useState({
     hours: 0,
     minutes: 0,
-    seconds: 0
+    seconds: 0,
   });
   const [isOpen, setIsOpen] = useState(false);
   const onChange = newDuration => {
@@ -30,11 +30,11 @@ function App() {
           overlay: {
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           },
           content: {
-            position: "static"
-          }
+            position: "static",
+          },
         }}
       >
         <div>
