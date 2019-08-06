@@ -20,8 +20,9 @@ DurationPicker.defaultProps = {
 };
 
 function DurationPicker(props) {
-  const { onChange, maxHours } = props;
+  const { onChange, maxHours, initialDuration } = props;
   const [isSmallScreen, setIsSmallScreen] = useState(undefined);
+  const [duration, setDuration] = useState(initialDuration);
   useEffect(() => {
     const resizeHandler = () => {
       if (window.innerWidth <= 400) {
@@ -35,11 +36,16 @@ function DurationPicker(props) {
       window.removeEventListener("resize", resizeHandler);
     };
   }, []);
+
+  useEffect(() => {
+    onChange(duration);
+  }, [duration, onChange]);
+
   return (
     <div className="picker">
       <DurationPickerColumn
         onChange={hours =>
-          onChange(prevDuration => ({ ...prevDuration, hours }))
+          setDuration(prevDuration => ({ ...prevDuration, hours }))
         }
         unit="hours"
         maxHours={maxHours}
@@ -48,7 +54,7 @@ function DurationPicker(props) {
       />
       <DurationPickerColumn
         onChange={minutes =>
-          onChange(prevDuration => ({ ...prevDuration, minutes }))
+          setDuration(prevDuration => ({ ...prevDuration, minutes }))
         }
         unit="mins"
         isSmallScreen={isSmallScreen}
@@ -56,7 +62,7 @@ function DurationPicker(props) {
       />
       <DurationPickerColumn
         onChange={seconds =>
-          onChange(prevDuration => ({ ...prevDuration, seconds }))
+          setDuration(prevDuration => ({ ...prevDuration, seconds }))
         }
         unit="secs"
         initial={45}
