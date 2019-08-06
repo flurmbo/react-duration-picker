@@ -1,4 +1,4 @@
-React duration picker for mobile, inspired by Android number pickers.
+React duration picker for mobile, inspired by Android number pickers. A live demo is available [here](https://flurmbo.github.io/react-duration-picker).
 
 # Installation
 

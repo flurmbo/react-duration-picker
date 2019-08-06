@@ -56,15 +56,7 @@
   transform: translateX(-50%);
   border-color: rgba(109, 202, 236, 1);
 }
-.foo {
-  font-size: 17px;
-  position: relative;
-  top: 1px;
-  left: 1px;
-  color: gray;
-  width: 0px;
-  font-style: italic;
-}
+
 .textOverlay {
   position: absolute;
   /* font-style: italic; */
@@ -78,23 +70,21 @@
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
 }
+
+.textOverlay div {
+  font-size: 17px;
+  position: relative;
+  top: 1px;
+  left: 1px;
+  color: gray;
+  width: 0px;
+  font-style: italic;
+}
+
 .cell {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 35px;
   font-size: 20px;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }

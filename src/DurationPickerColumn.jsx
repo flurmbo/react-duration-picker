@@ -40,7 +40,6 @@ function DurationPickerColumn(props) {
   const containerRef = useRef(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const isMouseDownRef = useRef(false);
-  const [isColumnFocused, setIsColumnFocused] = useState(false);
 
   const moveHandler = useCallback(
     e => {
@@ -115,7 +114,6 @@ function DurationPickerColumn(props) {
 
   const focusInHandler = () => {
     window.addEventListener("keydown", keyDownHandler);
-    setIsColumnFocused(true);
   };
 
   const focusOutHandler = () => {
@@ -207,7 +205,7 @@ function DurationPickerColumn(props) {
         <hr className="reticule" style={{ top: CELL_HEIGHT * 2 - 1 }} />
         <div className="textOverlay" style={{ top: CELL_HEIGHT }}>
           {`${toTwoDigitString(currentSelectionRef.current)}`}
-          <div className="foo">{isSmallScreen ? unit[0] : unit}</div>
+          <div>{isSmallScreen ? unit[0] : unit}</div>
         </div>
       </React.Fragment>
       <div

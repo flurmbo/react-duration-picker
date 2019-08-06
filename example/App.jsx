@@ -17,8 +17,10 @@ function App() {
   return (
     <React.Fragment>
       <h1>React Duration Picker</h1>
-      Hook based React component for picking durations of time. Inspired by
-      Android number pickers.
+      <p>
+        Hook based React component for picking durations of time. Inspired by
+        Android number pickers.
+      </p>
       <h2>Example</h2>
       <button onClick={() => setIsOpen(true)} type="button">
         Select Duration
@@ -49,12 +51,24 @@ function App() {
           type="button"
           style={{ float: "right" }}
         >
-          Select duration
+          Confirm Selection
         </button>
       </ReactModal>
       <div>
-        {`You have selected the numbers ${hours}, ${minutes}, and ${seconds}.`}
+        {`You have selected a duration of ${hours} hour${
+          hours !== 1 ? "s" : ""
+        }, ${minutes} minute${minutes !== 1 ? "s" : ""}, and ${seconds} second${
+          seconds !== 1 ? "s" : ""
+        }.`}
       </div>
+      <h2>Features</h2>
+      <ul>
+        <li>Support for mobile devices as well as mouse and keyboard input.</li>
+        <li>
+          Source code and documentation available on{" "}
+          <a href="https://github.com/flurmbo/react-duration-picker">Github</a>.
+        </li>
+      </ul>
     </React.Fragment>
   );
 }
