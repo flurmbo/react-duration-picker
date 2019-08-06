@@ -8,12 +8,14 @@ DurationPickerColumn.propTypes = {
   isSmallScreen: PropTypes.bool,
   maxHours: PropTypes.number,
   cellHeight: PropTypes.number,
+  initial: PropTypes.number,
 };
 
 DurationPickerColumn.defaultProps = {
   isSmallScreen: undefined,
   maxHours: 10,
   cellHeight: 35,
+  initial: 0,
 };
 function DurationPickerColumn(props) {
   // ********* STATE VARIABLES, PROPS, REFS ********* //
@@ -96,17 +98,24 @@ function DurationPickerColumn(props) {
   const endHandler = useCallback(e => {
     e.preventDefault();
     const { offset } = offsetStateRef.current;
-    // slowly slide to align current selection to center
+    // align current selection to center
     const currentSelectionIndex = getCurrentSelectionIndex(offset);
-    setOffsetState(prevOffsetState => ({
-      ...prevOffsetState,
-      offset: -1 * (currentSelectionIndex - 1) * cellHeight,
-    }));
+    // setOffsetState(prevOffsetState => ({
+    //   ...prevOffsetState,
+    //   offset: -1 * (currentSelectionIndex - 1) * cellHeight,
+    // }));
+    alignOffsetToCell(currentSelectionIndex);
   }, []);
 
   const mouseDownHandler = e => {
     startHandler(e);
     setIsMouseDown(true);
+  };
+  const alignOffsetToCell = cellIndex => {
+    setOffsetState(prevOffsetState => ({
+      ...prevOffsetState,
+      offset: -1 * (cellIndex - 1) * cellHeight,
+    }));
   };
 
   const keyDownHandler = e => {
@@ -123,16 +132,7 @@ function DurationPickerColumn(props) {
 
   // set up initial position configuration of slidey and measure slidey
   useEffect(() => {
-    function getInitialOffset(slideyElem) {
-      const slideyRect = slideyElem.getBoundingClientRect();
-      return (slideyRect.bottom - slideyRect.top) / 2;
-    }
-
-    setOffsetState(prevOffsetState => ({
-      offset: -1 * getInitialOffset(slideyRef.current),
-      inA: true,
-      cellContents: prevOffsetState.cellContents,
-    }));
+    alignOffsetToCell(props.initial);
     const boundingClientRect = slideyRef.current.getBoundingClientRect();
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
   }, [slideyRectHeight]);

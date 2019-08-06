@@ -44,6 +44,7 @@ function DurationPicker(props) {
         unit="hours"
         maxHours={maxHours}
         isSmallScreen={isSmallScreen}
+        initial={5}
       />
       <DurationPickerColumn
         onChange={minutes =>
@@ -51,12 +52,14 @@ function DurationPicker(props) {
         }
         unit="mins"
         isSmallScreen={isSmallScreen}
+        initial={23}
       />
       <DurationPickerColumn
         onChange={seconds =>
           onChange(prevDuration => ({ ...prevDuration, seconds }))
         }
         unit="secs"
+        initial={45}
         isSmallScreen={isSmallScreen}
       />
     </div>

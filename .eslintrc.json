@@ -7,6 +7,7 @@
       "jsx": true
     }
   },
+  "plugins": ["react-hooks"],
   "rules": {
     "comma-dangle": ["error", "always-multiline"],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
@@ -14,7 +15,9 @@
     "import/no-extraneous-dependencies": ["off"],
     "react/jsx-filename-extension": ["off"],
     "no-unused-vars": ["warn"],
-    "react/jsx-one-expression-per-line": ["off"]
+    "react/jsx-one-expression-per-line": ["off"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
   "extends": ["airbnb", "prettier"]
 }
