@@ -1,19 +1,11 @@
 import React, { useState } from "react";
-import ReactModal from "react-modal";
-import DurationPicker from "../src/DurationPicker";
+import AppModal from "./AppModal";
 
-ReactModal.setAppElement("#root");
 function App() {
-  const [duration, setDuration] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  const [displayedDuration, setDisplayedDuration] = useState({ undefined });
   const [isOpen, setIsOpen] = useState(false);
-  const onChange = newDuration => {
-    setDuration(newDuration);
-  };
-  const { hours, minutes, seconds } = duration;
+  const [hasOpenedModal, setHasOpenedModal] = useState(false);
+  const { hours, minutes, seconds } = displayedDuration;
   return (
     <React.Fragment>
       <h1>React Duration Picker</h1>
@@ -22,45 +14,24 @@ function App() {
         Android number pickers.
       </p>
       <h2>Example</h2>
-      <button onClick={() => setIsOpen(true)} type="button">
-        Select Duration
-      </button>
-      <ReactModal
-        isOpen={isOpen}
-        contentLabel="Select Duration"
-        style={{
-          overlay: {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-          content: {
-            position: "static",
-          },
-        }}
-      >
-        <div>
-          <DurationPicker
-            onChange={onChange}
-            initialDuration={{ hours: 0, minutes: 0, seconds: 0 }}
-            maxHours={9}
-          />
-        </div>
-        <button
-          onClick={() => setIsOpen(false)}
-          type="button"
-          style={{ float: "right" }}
-        >
-          Confirm Selection
-        </button>
-      </ReactModal>
+
       <div>
-        {`You have selected a duration of ${hours} hour${
-          hours !== 1 ? "s" : ""
-        }, ${minutes} minute${minutes !== 1 ? "s" : ""}, and ${seconds} second${
-          seconds !== 1 ? "s" : ""
-        }.`}
+        {hasOpenedModal && !isOpen
+          ? `You have selected a duration of ${hours} hour${
+              hours !== 1 ? "s" : ""
+            }, ${minutes} minute${
+              minutes !== 1 ? "s" : ""
+            }, and ${seconds} second${seconds !== 1 ? "s" : ""}.`
+          : "Click the button on the right to select a duration."}
+        <button
+          style={{ marginLeft: 10 }}
+          onClick={() => setIsOpen(true)}
+          type="button"
+        >
+          Select Duration
+        </button>
       </div>
+
       <h2>Features</h2>
       <ul>
         <li>Support for mobile devices as well as mouse and keyboard input.</li>
@@ -69,6 +40,7 @@ function App() {
           <a href="https://github.com/flurmbo/react-duration-picker">Github</a>.
         </li>
       </ul>
+      <AppModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </React.Fragment>
   );
 }
