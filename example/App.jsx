@@ -2,10 +2,19 @@ import React, { useState } from "react";
 import AppModal from "./AppModal";
 
 function App() {
-  const [displayedDuration, setDisplayedDuration] = useState({ undefined });
+  const [durationDisplayedInText, setDurationDisplayedInText] = useState(
+    undefined
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedModal, setHasOpenedModal] = useState(false);
-  const { hours, minutes, seconds } = displayedDuration;
+  const onCloseModal = duration => {
+    setDurationDisplayedInText(duration);
+  };
+  const onOpenModal = () => {
+    setIsOpen(true);
+    setHasOpenedModal(true);
+  };
+  const { hours, minutes, seconds } = durationDisplayedInText || {};
   return (
     <React.Fragment>
       <h1>React Duration Picker</h1>
@@ -16,18 +25,14 @@ function App() {
       <h2>Example</h2>
 
       <div>
-        {hasOpenedModal && !isOpen
+        {hasOpenedModal && durationDisplayedInText
           ? `You have selected a duration of ${hours} hour${
               hours !== 1 ? "s" : ""
             }, ${minutes} minute${
               minutes !== 1 ? "s" : ""
             }, and ${seconds} second${seconds !== 1 ? "s" : ""}.`
           : "Click the button on the right to select a duration."}
-        <button
-          style={{ marginLeft: 10 }}
-          onClick={() => setIsOpen(true)}
-          type="button"
-        >
+        <button style={{ marginLeft: 10 }} onClick={onOpenModal} type="button">
           Select Duration
         </button>
       </div>
@@ -40,7 +45,11 @@ function App() {
           <a href="https://github.com/flurmbo/react-duration-picker">Github</a>.
         </li>
       </ul>
-      <AppModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <AppModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onCloseModal={onCloseModal}
+      />
     </React.Fragment>
   );
 }

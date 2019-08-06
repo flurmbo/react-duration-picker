@@ -8,14 +8,21 @@ ReactModal.setAppElement("#root");
 AppModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
+  onCloseModal: PropTypes.func.isRequired,
 };
+
 function AppModal(props) {
   const { isOpen } = props;
-  const onChange = newDuration => {
-    console.log(newDuration);
+  const [durationDisplayedOnPicker, setDurationDisplayedOnPicker] = useState(
+    undefined
+  );
+  const onChange = duration => {
+    setDurationDisplayedOnPicker(duration);
   };
   const buttonClickHandler = () => {
-    props.setIsOpen(false);
+    const { setIsOpen, onCloseModal } = props;
+    setIsOpen(false);
+    onCloseModal(durationDisplayedOnPicker);
   };
 
   return (
