@@ -2,22 +2,22 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { toTwoDigitString } from "./utils";
 
-const CELL_HEIGHT = 35;
-
 DurationPickerColumn.propTypes = {
   onChange: PropTypes.func.isRequired,
   unit: PropTypes.oneOf(["hours", "mins", "secs"]).isRequired,
   isSmallScreen: PropTypes.bool,
   maxHours: PropTypes.number,
+  cellHeight: PropTypes.number,
 };
 
 DurationPickerColumn.defaultProps = {
   isSmallScreen: undefined,
   maxHours: 10,
+  cellHeight: 35,
 };
 function DurationPickerColumn(props) {
   // ********* STATE VARIABLES, PROPS, REFS ********* //
-  const { onChange, isSmallScreen, unit, maxHours } = props;
+  const { onChange, isSmallScreen, unit, maxHours, cellHeight } = props;
   const NUM_CELLS = unit === "hours" ? maxHours : 60;
   const MIDDLE_CELL = NUM_CELLS / 2;
   const [offsetState, setOffsetState] = useState(() => {
@@ -87,10 +87,10 @@ function DurationPickerColumn(props) {
   }
 
   function getCurrentSelection(offset, numbers) {
-    return numbers[Math.abs(Math.round(offset / CELL_HEIGHT)) + 1];
+    return numbers[Math.abs(Math.round(offset / cellHeight)) + 1];
   }
   function getCurrentSelectionIndex(offset) {
-    return Math.abs(Math.round(offset / CELL_HEIGHT)) + 1;
+    return Math.abs(Math.round(offset / cellHeight)) + 1;
   }
 
   const endHandler = useCallback(e => {
@@ -100,7 +100,7 @@ function DurationPickerColumn(props) {
     const currentSelectionIndex = getCurrentSelectionIndex(offset);
     setOffsetState(prevOffsetState => ({
       ...prevOffsetState,
-      offset: -1 * (currentSelectionIndex - 1) * CELL_HEIGHT,
+      offset: -1 * (currentSelectionIndex - 1) * cellHeight,
     }));
   }, []);
 
@@ -202,9 +202,9 @@ function DurationPickerColumn(props) {
       tabIndex={0}
     >
       <React.Fragment>
-        <hr className="reticule" style={{ top: CELL_HEIGHT - 1 }} />
-        <hr className="reticule" style={{ top: CELL_HEIGHT * 2 - 1 }} />
-        <div className="textOverlay" style={{ top: CELL_HEIGHT }}>
+        <hr className="reticule" style={{ top: cellHeight - 1 }} />
+        <hr className="reticule" style={{ top: cellHeight * 2 - 1 }} />
+        <div className="textOverlay" style={{ top: cellHeight }}>
           {`${toTwoDigitString(currentSelectionRef.current)}`}
           <div>{isSmallScreen ? unit[0] : unit}</div>
         </div>
