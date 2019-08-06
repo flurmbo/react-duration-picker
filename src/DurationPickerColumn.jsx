@@ -8,16 +8,17 @@ DurationPickerColumn.propTypes = {
   onChange: PropTypes.func.isRequired,
   unit: PropTypes.oneOf(["hours", "mins", "secs"]).isRequired,
   isSmallScreen: PropTypes.bool,
-  maxHours: PropTypes.number.isRequired,
+  maxHours: PropTypes.number,
 };
 
 DurationPickerColumn.defaultProps = {
   isSmallScreen: undefined,
+  maxHours: 10,
 };
 function DurationPickerColumn(props) {
   // ********* STATE VARIABLES, PROPS, REFS ********* //
   const { onChange, isSmallScreen, unit, maxHours } = props;
-  const NUM_CELLS = unit === "hours" && maxHours ? maxHours : 60;
+  const NUM_CELLS = unit === "hours" ? maxHours : 60;
   const MIDDLE_CELL = NUM_CELLS / 2;
   const [offsetState, setOffsetState] = useState(() => {
     const numbers = [];
@@ -195,7 +196,7 @@ function DurationPickerColumn(props) {
       onTouchEnd={endHandler}
       onMouseDown={mouseDownHandler}
       role="slider"
-      aria-valuemax={199999}
+      aria-valuemax={unit === "hours" ? maxHours : 60}
       aria-valuemin={0}
       aria-valuenow={currentSelectionRef.current}
       tabIndex={0}

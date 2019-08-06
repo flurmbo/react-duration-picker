@@ -5,7 +5,5 @@ function toTwoDigitString(number) {
   return `${number}`;
 }
 
-function otherFunction() {
-  console.log("himom");
-}
-export { toTwoDigitString, otherFunction };
+// eslint-disable-next-line import/prefer-default-export
+export { toTwoDigitString };

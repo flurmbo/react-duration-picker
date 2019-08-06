@@ -13,7 +13,8 @@
     "no-use-before-define": ["off"],
     "import/no-extraneous-dependencies": ["off"],
     "react/jsx-filename-extension": ["off"],
-    "no-unused-vars": ["warn"]
+    "no-unused-vars": ["warn"],
+    "react/jsx-one-expression-per-line": ["off"]
   },
   "extends": ["airbnb", "prettier"]
 }
