@@ -23,9 +23,19 @@ function DurationPicker(props) {
   const { onChange, maxHours, initialDuration } = props;
   const [isSmallScreen, setIsSmallScreen] = useState(undefined);
   const [duration, setDuration] = useState(initialDuration);
+
+  // column onChange handlers
+  const onChangeHours = useCallback(hours => {
+    setDuration(prevDuration => ({ ...prevDuration, hours }));
+  }, []);
+  const onChangeMins = useCallback(mins => {
+    setDuration(prevDuration => ({ ...prevDuration, mins }));
+  }, []);
   const onChangeSecs = useCallback(secs => {
     setDuration(prevDuration => ({ ...prevDuration, secs }));
   }, []);
+
+  // add/remove resize listener and measure screen size
   useEffect(() => {
     const resizeHandler = () => {
       if (window.innerWidth <= 400) {
@@ -40,6 +50,7 @@ function DurationPicker(props) {
     };
   }, []);
 
+  // execute callback prop
   useEffect(() => {
     console.log(`${duration.hours} ${duration.mins} ${duration.secs}`);
     onChange(duration);

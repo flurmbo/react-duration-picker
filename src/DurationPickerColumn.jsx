@@ -47,6 +47,13 @@ function DurationPickerColumn(props) {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const isMouseDownRef = useRef(false);
 
+  // ********* EVENT HANDLERS ********* //
+
+  function startHandler(e) {
+    e.preventDefault();
+    setLastClientY(e.touches ? e.touches[0].clientY : e.clientY);
+  }
+
   const moveHandler = useCallback(
     e => {
       const { offset } = offsetStateRef.current;
@@ -56,24 +63,6 @@ function DurationPickerColumn(props) {
       setLastClientY(position);
     },
     [handleSlideColumn]
-  );
-  function startHandler(e) {
-    e.preventDefault();
-    setLastClientY(e.touches ? e.touches[0].clientY : e.clientY);
-  }
-
-  const getCurrentSelection = useCallback(
-    (offset, numbers) => {
-      return numbers[Math.abs(Math.round(offset / cellHeight)) + 1];
-    },
-    [cellHeight]
-  );
-
-  const getCurrentSelectionIndex = useCallback(
-    offset => {
-      return Math.abs(Math.round(offset / cellHeight)) + 1;
-    },
-    [cellHeight]
   );
 
   const endHandler = useCallback(
@@ -110,6 +99,36 @@ function DurationPickerColumn(props) {
     },
     [endHandler]
   );
+
+  const keyDownHandler = useCallback(e => {
+    if (columnIsFocusedRef.current) {
+      console.log(`key down and key is ${e.code}`);
+    }
+  }, []);
+
+  const focusInHandler = useCallback(() => {
+    setColumnIsFocused(true);
+  }, []);
+
+  const focusOutHandler = useCallback(() => {
+    setColumnIsFocused(false);
+  }, []);
+
+  // ********* HELPER FUNCTIONS ********* //
+  const getCurrentSelection = useCallback(
+    (offset, numbers) => {
+      return numbers[Math.abs(Math.round(offset / cellHeight)) + 1];
+    },
+    [cellHeight]
+  );
+
+  const getCurrentSelectionIndex = useCallback(
+    offset => {
+      return Math.abs(Math.round(offset / cellHeight)) + 1;
+    },
+    [cellHeight]
+  );
+
   const alignOffsetToCell = useCallback(
     cellIndex => {
       // setOffsetState(prevOffsetState => ({
@@ -155,22 +174,10 @@ function DurationPickerColumn(props) {
     [middleCell, numCells, slideyRectHeight, calculateOffsetToColumnRatio]
   );
 
-  const keyDownHandler = useCallback(e => {
-    if (columnIsFocusedRef.current) {
-      console.log(`key down and key is ${e.code}`);
-    }
-  }, []);
+  // ********* EFFECTS ********* //
 
-  const focusInHandler = useCallback(() => {
-    setColumnIsFocused(true);
-  }, []);
-
-  const focusOutHandler = useCallback(() => {
-    setColumnIsFocused(false);
-  }, []);
-
-  // set up initial position configuration of slidey and measure slidey
   useEffect(() => {
+    // set up initial position configuration of slidey and measure slidey
     alignOffsetToCell(props.initial);
     const boundingClientRect = slideyRef.current.getBoundingClientRect();
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
@@ -189,8 +196,8 @@ function DurationPickerColumn(props) {
     }
   }, [columnIsFocused]);
 
-  // set up and teardown listeners for keyboard and mouse input
   useEffect(() => {
+    // set up and teardown listeners for keyboard and mouse input
     const container = containerRef.current;
     container.addEventListener("focusin", focusInHandler);
     container.addEventListener("focusout", focusOutHandler);
@@ -230,6 +237,8 @@ function DurationPickerColumn(props) {
     lastClientYRef.current = lastClientY;
   }, [lastClientY]);
 
+  // ********* RENDER COMPONENT ********* //
+
   const cells = offsetState.cellContents.map(value => {
     return (
       <div className="cell" key={value}>
@@ -237,7 +246,9 @@ function DurationPickerColumn(props) {
       </div>
     );
   });
+
   console.log(offsetState.inA);
+
   return (
     <div
       className="columnContainer"
@@ -252,14 +263,12 @@ function DurationPickerColumn(props) {
       aria-valuenow={currentSelectionRef.current}
       tabIndex={0}
     >
-      <React.Fragment>
-        <hr className="reticule" style={{ top: cellHeight - 1 }} />
-        <hr className="reticule" style={{ top: cellHeight * 2 - 1 }} />
-        <div className="textOverlay" style={{ top: cellHeight }}>
-          {`${toTwoDigitString(currentSelectionRef.current)}`}
-          <div>{isSmallScreen ? unit[0] : unit}</div>
-        </div>
-      </React.Fragment>
+      <hr className="reticule" style={{ top: cellHeight - 1 }} />
+      <hr className="reticule" style={{ top: cellHeight * 2 - 1 }} />
+      <div className="textOverlay" style={{ top: cellHeight }}>
+        {`${toTwoDigitString(currentSelectionRef.current)}`}
+        <div>{isSmallScreen ? unit[0] : unit}</div>
+      </div>
       <div
         className="column"
         style={{ top: offsetState.offset || 0 }}
