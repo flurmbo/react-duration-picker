@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import "./DurationPicker.css";
 import DurationPickerColumn from "./DurationPickerColumn";
@@ -23,6 +23,9 @@ function DurationPicker(props) {
   const { onChange, maxHours, initialDuration } = props;
   const [isSmallScreen, setIsSmallScreen] = useState(undefined);
   const [duration, setDuration] = useState(initialDuration);
+  const onChangeSecs = useCallback(secs => {
+    setDuration(prevDuration => ({ ...prevDuration, secs }));
+  }, []);
   useEffect(() => {
     const resizeHandler = () => {
       if (window.innerWidth <= 400) {
@@ -38,12 +41,13 @@ function DurationPicker(props) {
   }, []);
 
   useEffect(() => {
+    console.log(`${duration.hours} ${duration.mins} ${duration.secs}`);
     onChange(duration);
   }, [duration, onChange]);
 
   return (
     <div className="picker">
-      <DurationPickerColumn
+      {/* <DurationPickerColumn
         onChange={hours =>
           setDuration(prevDuration => ({ ...prevDuration, hours }))
         }
@@ -59,11 +63,9 @@ function DurationPicker(props) {
         unit="mins"
         isSmallScreen={isSmallScreen}
         initial={initialDuration.mins}
-      />
+      /> */}
       <DurationPickerColumn
-        onChange={secs =>
-          setDuration(prevDuration => ({ ...prevDuration, secs }))
-        }
+        onChange={onChangeSecs}
         unit="secs"
         isSmallScreen={isSmallScreen}
       />

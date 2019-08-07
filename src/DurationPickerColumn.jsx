@@ -17,6 +17,7 @@ DurationPickerColumn.defaultProps = {
   cellHeight: 35,
   initial: 0,
 };
+
 function DurationPickerColumn(props) {
   // ********* STATE VARIABLES, PROPS, REFS ********* //
   const { onChange, isSmallScreen, unit, maxHours, cellHeight } = props;
@@ -48,42 +49,13 @@ function DurationPickerColumn(props) {
 
   const moveHandler = useCallback(
     e => {
-      function handleSlideColumn(newOffset) {
-        const slideyRect = slideyRef.current.getBoundingClientRect();
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const middleOfContainer =
-          (containerRect.bottom + containerRect.top) / 2;
-        const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top;
-        const proportion = middleOfVisibleSlideyBit / slideyRectHeight;
-        if (proportion >= 0.75 || proportion <= 0.25) {
-          setOffsetState(prevOffsetState => {
-            return {
-              offset:
-                newOffset +
-                ((proportion >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
-              inA: !prevOffsetState.inA,
-              cellContents: [
-                ...prevOffsetState.cellContents.slice(middleCell, numCells),
-                ...prevOffsetState.cellContents.slice(0, middleCell),
-              ],
-            };
-          });
-        } else {
-          setOffsetState(prevOffsetState => ({
-            offset: newOffset,
-            inA: prevOffsetState.inA,
-            cellContents: prevOffsetState.cellContents,
-          }));
-        }
-      }
-
       const { offset } = offsetStateRef.current;
       e.preventDefault();
       const position = e.touches ? e.touches[0].clientY : e.clientY;
       handleSlideColumn(offset + position - lastClientYRef.current);
       setLastClientY(position);
     },
-    [middleCell, numCells, slideyRectHeight]
+    [handleSlideColumn]
   );
   function startHandler(e) {
     e.preventDefault();
@@ -123,7 +95,6 @@ function DurationPickerColumn(props) {
   const mouseMoveHandler = useCallback(
     e => {
       if (isMouseDownRef.current) {
-        console.log("mouse is moving and down");
         moveHandler(e);
       }
     },
@@ -150,19 +121,22 @@ function DurationPickerColumn(props) {
     [cellHeight, handleSlideColumn]
   );
 
+  const calculateOffsetToColumnRatio = useCallback(() => {
+    const slideyRect = slideyRef.current.getBoundingClientRect();
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const middleOfContainer = (containerRect.bottom + containerRect.top) / 2;
+    const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top;
+    return middleOfVisibleSlideyBit / slideyRectHeight;
+  }, [slideyRectHeight]);
+
   const handleSlideColumn = useCallback(
     newOffset => {
-      const slideyRect = slideyRef.current.getBoundingClientRect();
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const middleOfContainer = (containerRect.bottom + containerRect.top) / 2;
-      const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top;
-      const proportion = middleOfVisibleSlideyBit / slideyRectHeight;
-      if (proportion >= 0.75 || proportion <= 0.25) {
+      const ratio = calculateOffsetToColumnRatio();
+      if (ratio >= 0.75 || ratio <= 0.25) {
         setOffsetState(prevOffsetState => {
           return {
             offset:
-              newOffset +
-              ((proportion >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
+              newOffset + ((ratio >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
             inA: !prevOffsetState.inA,
             cellContents: [
               ...prevOffsetState.cellContents.slice(middleCell, numCells),
@@ -178,7 +152,7 @@ function DurationPickerColumn(props) {
         }));
       }
     },
-    [middleCell, numCells, slideyRectHeight]
+    [middleCell, numCells, slideyRectHeight, calculateOffsetToColumnRatio]
   );
 
   const keyDownHandler = useCallback(e => {
@@ -263,6 +237,7 @@ function DurationPickerColumn(props) {
       </div>
     );
   });
+  console.log(offsetState.inA);
   return (
     <div
       className="columnContainer"

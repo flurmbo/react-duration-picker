@@ -33,7 +33,6 @@ function AppModal(props) {
     setIsOpen(false);
     onCloseModal(durationDisplayedOnPicker);
   };
-  console.log(durationDisplayedOnPicker || { hours: 0, mins: 0, secs: 0 });
   return (
     <ReactModal
       isOpen={isOpen}
