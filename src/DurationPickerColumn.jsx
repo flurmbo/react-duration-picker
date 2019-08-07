@@ -20,14 +20,10 @@ DurationPickerColumn.defaultProps = {
 function DurationPickerColumn(props) {
   // ********* STATE VARIABLES, PROPS, REFS ********* //
   const { onChange, isSmallScreen, unit, maxHours, cellHeight } = props;
-<<<<<<< HEAD
   const [columnIsFocused, setColumnIsFocused] = useState(false);
-  const NUM_CELLS = unit === "hours" ? maxHours : 60;
-  const MIDDLE_CELL = NUM_CELLS / 2;
-=======
+  const columnIsFocusedRef = useRef(false);
   const numCells = unit === "hours" ? maxHours : 60;
   const middleCell = numCells / 2;
->>>>>>> alignment handler issues
   const [offsetState, setOffsetState] = useState(() => {
     const numbers = [];
     for (let i = 0; i < numCells; i++) {
@@ -119,33 +115,30 @@ function DurationPickerColumn(props) {
     [alignOffsetToCell, getCurrentSelectionIndex]
   );
 
-  const mouseDownHandler = e => {
+  const mouseDownHandler = useCallback(e => {
     startHandler(e);
     setIsMouseDown(true);
-  };
+  }, []);
 
-<<<<<<< HEAD
-  const mouseMoveHandler = e => {
-    if (isMouseDownRef.current) {
-      console.log("mouse is moving and down");
-      moveHandler(e);
-    }
-  };
+  const mouseMoveHandler = useCallback(
+    e => {
+      if (isMouseDownRef.current) {
+        console.log("mouse is moving and down");
+        moveHandler(e);
+      }
+    },
+    [moveHandler]
+  );
 
-  const mouseUpHandler = e => {
-    if (isMouseDownRef.current) {
-      setIsMouseDown(false);
-      endHandler(e);
-    }
-  };
-
-  const alignOffsetToCell = cellIndex => {
-    setOffsetState(prevOffsetState => ({
-      ...prevOffsetState,
-      offset: -1 * (cellIndex - 1) * cellHeight,
-    }));
-  };
-=======
+  const mouseUpHandler = useCallback(
+    e => {
+      if (isMouseDownRef.current) {
+        setIsMouseDown(false);
+        endHandler(e);
+      }
+    },
+    [endHandler]
+  );
   const alignOffsetToCell = useCallback(
     cellIndex => {
       // setOffsetState(prevOffsetState => ({
@@ -187,31 +180,20 @@ function DurationPickerColumn(props) {
     },
     [middleCell, numCells, slideyRectHeight]
   );
->>>>>>> alignment handler issues
 
-  const keyDownHandler = e => {
-    if (columnIsFocused) {
+  const keyDownHandler = useCallback(e => {
+    if (columnIsFocusedRef.current) {
       console.log(`key down and key is ${e.code}`);
     }
-  };
+  }, []);
 
-<<<<<<< HEAD
-  const focusInHandler = () => {
-    setColumnIsFocused(true);
-  };
-
-  const focusOutHandler = () => {
-    setColumnIsFocused(false);
-  };
-=======
   const focusInHandler = useCallback(() => {
-    window.addEventListener("keydown", keyDownHandler);
+    setColumnIsFocused(true);
   }, []);
 
   const focusOutHandler = useCallback(() => {
-    window.removeEventListener("keydown", keyDownHandler);
+    setColumnIsFocused(false);
   }, []);
->>>>>>> alignment handler issues
 
   // set up initial position configuration of slidey and measure slidey
   useEffect(() => {
@@ -226,6 +208,12 @@ function DurationPickerColumn(props) {
       isMouseDownRef.current = isMouseDown;
     }
   }, [isMouseDown]);
+
+  useEffect(() => {
+    if (columnIsFocused !== columnIsFocusedRef.current) {
+      columnIsFocusedRef.current = columnIsFocused;
+    }
+  }, [columnIsFocused]);
 
   // set up and teardown listeners for keyboard and mouse input
   useEffect(() => {
@@ -242,7 +230,14 @@ function DurationPickerColumn(props) {
       window.removeEventListener("mousemove", mouseDownHandler);
       window.removeEventListener("mouseup", mouseUpHandler);
     };
-  }, [focusInHandler, focusOutHandler]);
+  }, [
+    focusInHandler,
+    focusOutHandler,
+    keyDownHandler,
+    mouseDownHandler,
+    mouseMoveHandler,
+    mouseUpHandler,
+  ]);
 
   useEffect(() => {
     // when offset config is changed, update current selection
