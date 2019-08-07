@@ -20,12 +20,17 @@ DurationPickerColumn.defaultProps = {
 function DurationPickerColumn(props) {
   // ********* STATE VARIABLES, PROPS, REFS ********* //
   const { onChange, isSmallScreen, unit, maxHours, cellHeight } = props;
+<<<<<<< HEAD
   const [columnIsFocused, setColumnIsFocused] = useState(false);
   const NUM_CELLS = unit === "hours" ? maxHours : 60;
   const MIDDLE_CELL = NUM_CELLS / 2;
+=======
+  const numCells = unit === "hours" ? maxHours : 60;
+  const middleCell = numCells / 2;
+>>>>>>> alignment handler issues
   const [offsetState, setOffsetState] = useState(() => {
     const numbers = [];
-    for (let i = 0; i < NUM_CELLS; i++) {
+    for (let i = 0; i < numCells; i++) {
       numbers.push(i);
     }
     return {
@@ -62,8 +67,8 @@ function DurationPickerColumn(props) {
                 ((proportion >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
               inA: !prevOffsetState.inA,
               cellContents: [
-                ...prevOffsetState.cellContents.slice(MIDDLE_CELL, NUM_CELLS),
-                ...prevOffsetState.cellContents.slice(0, MIDDLE_CELL),
+                ...prevOffsetState.cellContents.slice(middleCell, numCells),
+                ...prevOffsetState.cellContents.slice(0, middleCell),
               ],
             };
           });
@@ -82,37 +87,44 @@ function DurationPickerColumn(props) {
       handleSlideColumn(offset + position - lastClientYRef.current);
       setLastClientY(position);
     },
-    [slideyRectHeight]
+    [middleCell, numCells, slideyRectHeight]
   );
   function startHandler(e) {
     e.preventDefault();
     setLastClientY(e.touches ? e.touches[0].clientY : e.clientY);
   }
 
-  function getCurrentSelection(offset, numbers) {
-    return numbers[Math.abs(Math.round(offset / cellHeight)) + 1];
-  }
-  function getCurrentSelectionIndex(offset) {
-    return Math.abs(Math.round(offset / cellHeight)) + 1;
-  }
+  const getCurrentSelection = useCallback(
+    (offset, numbers) => {
+      return numbers[Math.abs(Math.round(offset / cellHeight)) + 1];
+    },
+    [cellHeight]
+  );
 
-  const endHandler = useCallback(e => {
-    e.preventDefault();
-    const { offset } = offsetStateRef.current;
-    // align current selection to center
-    const currentSelectionIndex = getCurrentSelectionIndex(offset);
-    // setOffsetState(prevOffsetState => ({
-    //   ...prevOffsetState,
-    //   offset: -1 * (currentSelectionIndex - 1) * cellHeight,
-    // }));
-    alignOffsetToCell(currentSelectionIndex);
-  }, []);
+  const getCurrentSelectionIndex = useCallback(
+    offset => {
+      return Math.abs(Math.round(offset / cellHeight)) + 1;
+    },
+    [cellHeight]
+  );
+
+  const endHandler = useCallback(
+    e => {
+      e.preventDefault();
+      const { offset } = offsetStateRef.current;
+      // align current selection to center
+      const currentSelectionIndex = getCurrentSelectionIndex(offset);
+      alignOffsetToCell(currentSelectionIndex);
+    },
+    [alignOffsetToCell, getCurrentSelectionIndex]
+  );
 
   const mouseDownHandler = e => {
     startHandler(e);
     setIsMouseDown(true);
   };
 
+<<<<<<< HEAD
   const mouseMoveHandler = e => {
     if (isMouseDownRef.current) {
       console.log("mouse is moving and down");
@@ -133,6 +145,49 @@ function DurationPickerColumn(props) {
       offset: -1 * (cellIndex - 1) * cellHeight,
     }));
   };
+=======
+  const alignOffsetToCell = useCallback(
+    cellIndex => {
+      // setOffsetState(prevOffsetState => ({
+      //   ...prevOffsetState,
+      //   offset: -1 * (cellIndex - 1) * cellHeight,
+      // }));
+      handleSlideColumn(-1 * (cellIndex - 1) * cellHeight);
+    },
+    [cellHeight, handleSlideColumn]
+  );
+
+  const handleSlideColumn = useCallback(
+    newOffset => {
+      const slideyRect = slideyRef.current.getBoundingClientRect();
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const middleOfContainer = (containerRect.bottom + containerRect.top) / 2;
+      const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top;
+      const proportion = middleOfVisibleSlideyBit / slideyRectHeight;
+      if (proportion >= 0.75 || proportion <= 0.25) {
+        setOffsetState(prevOffsetState => {
+          return {
+            offset:
+              newOffset +
+              ((proportion >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
+            inA: !prevOffsetState.inA,
+            cellContents: [
+              ...prevOffsetState.cellContents.slice(middleCell, numCells),
+              ...prevOffsetState.cellContents.slice(0, middleCell),
+            ],
+          };
+        });
+      } else {
+        setOffsetState(prevOffsetState => ({
+          offset: newOffset,
+          inA: prevOffsetState.inA,
+          cellContents: prevOffsetState.cellContents,
+        }));
+      }
+    },
+    [middleCell, numCells, slideyRectHeight]
+  );
+>>>>>>> alignment handler issues
 
   const keyDownHandler = e => {
     if (columnIsFocused) {
@@ -140,6 +195,7 @@ function DurationPickerColumn(props) {
     }
   };
 
+<<<<<<< HEAD
   const focusInHandler = () => {
     setColumnIsFocused(true);
   };
@@ -147,13 +203,23 @@ function DurationPickerColumn(props) {
   const focusOutHandler = () => {
     setColumnIsFocused(false);
   };
+=======
+  const focusInHandler = useCallback(() => {
+    window.addEventListener("keydown", keyDownHandler);
+  }, []);
+
+  const focusOutHandler = useCallback(() => {
+    window.removeEventListener("keydown", keyDownHandler);
+  }, []);
+>>>>>>> alignment handler issues
 
   // set up initial position configuration of slidey and measure slidey
   useEffect(() => {
     alignOffsetToCell(props.initial);
     const boundingClientRect = slideyRef.current.getBoundingClientRect();
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
-  }, [slideyRectHeight]);
+    // eslint-disable-next-line react/destructuring-assignment
+  }, [alignOffsetToCell, props.initial, slideyRectHeight]);
 
   useEffect(() => {
     if (isMouseDown !== isMouseDownRef.current) {
@@ -176,7 +242,7 @@ function DurationPickerColumn(props) {
       window.removeEventListener("mousemove", mouseDownHandler);
       window.removeEventListener("mouseup", mouseUpHandler);
     };
-  }, []);
+  }, [focusInHandler, focusOutHandler]);
 
   useEffect(() => {
     // when offset config is changed, update current selection
@@ -189,7 +255,7 @@ function DurationPickerColumn(props) {
       onChange(currentSelection);
     }
     offsetStateRef.current = offsetState;
-  }, [offsetState, onChange]);
+  }, [getCurrentSelection, offsetState, onChange]);
 
   useEffect(() => {
     lastClientYRef.current = lastClientY;

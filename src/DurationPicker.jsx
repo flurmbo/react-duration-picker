@@ -50,22 +50,21 @@ function DurationPicker(props) {
         unit="hours"
         maxHours={maxHours}
         isSmallScreen={isSmallScreen}
-        initial={5}
+        initial={initialDuration.hours}
       />
       <DurationPickerColumn
-        onChange={minutes =>
-          setDuration(prevDuration => ({ ...prevDuration, minutes }))
+        onChange={mins =>
+          setDuration(prevDuration => ({ ...prevDuration, mins }))
         }
         unit="mins"
         isSmallScreen={isSmallScreen}
-        initial={23}
+        initial={initialDuration.mins}
       />
       <DurationPickerColumn
-        onChange={seconds =>
-          setDuration(prevDuration => ({ ...prevDuration, seconds }))
+        onChange={secs =>
+          setDuration(prevDuration => ({ ...prevDuration, secs }))
         }
         unit="secs"
-        initial={45}
         isSmallScreen={isSmallScreen}
       />
     </div>
