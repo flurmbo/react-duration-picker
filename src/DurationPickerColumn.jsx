@@ -20,6 +20,7 @@ DurationPickerColumn.defaultProps = {
 function DurationPickerColumn(props) {
   // ********* STATE VARIABLES, PROPS, REFS ********* //
   const { onChange, isSmallScreen, unit, maxHours, cellHeight } = props;
+  const [columnIsFocused, setColumnIsFocused] = useState(false);
   const NUM_CELLS = unit === "hours" ? maxHours : 60;
   const MIDDLE_CELL = NUM_CELLS / 2;
   const [offsetState, setOffsetState] = useState(() => {
@@ -111,6 +112,21 @@ function DurationPickerColumn(props) {
     startHandler(e);
     setIsMouseDown(true);
   };
+
+  const mouseMoveHandler = e => {
+    if (isMouseDownRef.current) {
+      console.log("mouse is moving and down");
+      moveHandler(e);
+    }
+  };
+
+  const mouseUpHandler = e => {
+    if (isMouseDownRef.current) {
+      setIsMouseDown(false);
+      endHandler(e);
+    }
+  };
+
   const alignOffsetToCell = cellIndex => {
     setOffsetState(prevOffsetState => ({
       ...prevOffsetState,
@@ -119,15 +135,17 @@ function DurationPickerColumn(props) {
   };
 
   const keyDownHandler = e => {
-    console.log(`key down and key is ${e.code}`);
+    if (columnIsFocused) {
+      console.log(`key down and key is ${e.code}`);
+    }
   };
 
   const focusInHandler = () => {
-    window.addEventListener("keydown", keyDownHandler);
+    setColumnIsFocused(true);
   };
 
   const focusOutHandler = () => {
-    window.removeEventListener("keydown", keyDownHandler);
+    setColumnIsFocused(false);
   };
 
   // set up initial position configuration of slidey and measure slidey
@@ -137,15 +155,26 @@ function DurationPickerColumn(props) {
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
   }, [slideyRectHeight]);
 
-  // set up and teardown listeners for keyboard input
+  useEffect(() => {
+    if (isMouseDown !== isMouseDownRef.current) {
+      isMouseDownRef.current = isMouseDown;
+    }
+  }, [isMouseDown]);
+
+  // set up and teardown listeners for keyboard and mouse input
   useEffect(() => {
     const container = containerRef.current;
     container.addEventListener("focusin", focusInHandler);
     container.addEventListener("focusout", focusOutHandler);
+    window.addEventListener("keydown", keyDownHandler);
+    window.addEventListener("mousemove", mouseMoveHandler);
+    window.addEventListener("mouseup", mouseUpHandler);
     return () => {
       container.removeEventListener("focusin", focusInHandler);
       container.removeEventListener("focusout", focusOutHandler);
       window.removeEventListener("keydown", keyDownHandler);
+      window.removeEventListener("mousemove", mouseDownHandler);
+      window.removeEventListener("mouseup", mouseUpHandler);
     };
   }, []);
 
@@ -165,20 +194,6 @@ function DurationPickerColumn(props) {
   useEffect(() => {
     lastClientYRef.current = lastClientY;
   }, [lastClientY]);
-  useEffect(() => {
-    if (isMouseDown && !isMouseDownRef.current) {
-      // mouse just depressed
-      window.addEventListener("mousemove", moveHandler);
-      const mouseUpHandler = e => {
-        endHandler(e);
-        setIsMouseDown(false);
-        window.removeEventListener("mousemove", moveHandler);
-        window.removeEventListener("mouseup", mouseUpHandler);
-      };
-      window.addEventListener("mouseup", mouseUpHandler);
-    }
-    isMouseDownRef.current = isMouseDown;
-  }, [isMouseDown, moveHandler, endHandler]);
 
   const cells = offsetState.cellContents.map(value => {
     return (
