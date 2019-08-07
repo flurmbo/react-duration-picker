@@ -49,6 +49,7 @@ function App() {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         onCloseModal={onCloseModal}
+        initialDuration={durationDisplayedInText || undefined}
       />
     </React.Fragment>
   );

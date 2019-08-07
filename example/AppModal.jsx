@@ -9,10 +9,19 @@ AppModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
   onCloseModal: PropTypes.func.isRequired,
+  initialDuration: PropTypes.shape({
+    hours: PropTypes.number,
+    mins: PropTypes.number,
+    secs: PropTypes.number,
+  }),
+};
+
+AppModal.defaultProps = {
+  initialDuration: { hours: 0, mins: 0, secs: 0 },
 };
 
 function AppModal(props) {
-  const { isOpen } = props;
+  const { isOpen, initialDuration } = props;
   const [durationDisplayedOnPicker, setDurationDisplayedOnPicker] = useState(
     undefined
   );
@@ -24,7 +33,7 @@ function AppModal(props) {
     setIsOpen(false);
     onCloseModal(durationDisplayedOnPicker);
   };
-
+  console.log(durationDisplayedOnPicker || { hours: 0, mins: 0, secs: 0 });
   return (
     <ReactModal
       isOpen={isOpen}
@@ -43,7 +52,7 @@ function AppModal(props) {
       <div>
         <DurationPicker
           onChange={onChange}
-          initialDuration={{ hours: 0, mins: 0, secs: 0 }}
+          initialDuration={initialDuration || { hours: 0, mins: 0, secs: 0 }}
           maxHours={9}
         />
       </div>
