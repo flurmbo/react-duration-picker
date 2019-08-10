@@ -24,7 +24,6 @@ function DurationPickerColumn(props) {
   const [columnIsFocused, setColumnIsFocused] = useState(false);
   const columnIsFocusedRef = useRef(false);
   const numCells = unit === "hours" ? maxHours : 60;
-  const middleCell = numCells / 2;
   const [offsetState, setOffsetState] = useState(() => {
     const numbers = [];
     for (let i = 0; i < numCells; i++) {
@@ -32,7 +31,7 @@ function DurationPickerColumn(props) {
     }
     return {
       offset: 0,
-      columnIsSplit: true,
+      columnIsSplit: false,
       cellContents: numbers,
     };
   });
@@ -158,8 +157,8 @@ function DurationPickerColumn(props) {
               newOffset + ((ratio >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
             columnIsSplit: !prevOffsetState.columnIsSplit,
             cellContents: [
-              ...prevOffsetState.cellContents.slice(middleCell, numCells),
-              ...prevOffsetState.cellContents.slice(0, middleCell),
+              ...prevOffsetState.cellContents.slice(numCells / 2, numCells),
+              ...prevOffsetState.cellContents.slice(0, numCells / 2),
             ],
           };
         });
@@ -171,7 +170,7 @@ function DurationPickerColumn(props) {
         }));
       }
     },
-    [middleCell, numCells, slideyRectHeight, calculateOffsetToColumnRatio]
+    [numCells, slideyRectHeight, calculateOffsetToColumnRatio]
   );
 
   // ********* EFFECTS ********* //
