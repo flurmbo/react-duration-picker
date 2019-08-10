@@ -52,7 +52,7 @@ function DurationPicker(props) {
 
   // execute callback prop
   useEffect(() => {
-    console.log(`${duration.hours} ${duration.mins} ${duration.secs}`);
+    // console.log(`${duration.hours} ${duration.mins} ${duration.secs}`);
     onChange(duration);
   }, [duration, onChange]);
   return (
