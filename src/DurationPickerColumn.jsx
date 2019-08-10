@@ -23,7 +23,7 @@ function DurationPickerColumn(props) {
   const { onChange, isSmallScreen, unit, maxHours, cellHeight } = props;
   const [columnIsFocused, setColumnIsFocused] = useState(false);
   const columnIsFocusedRef = useRef(false);
-  const numCells = unit === "hours" ? maxHours : 60;
+  const numCells = unit === "hours" ? maxHours + 1 : 60;
   const [offsetState, setOffsetState] = useState(() => {
     const numbers = [];
     for (let i = 0; i < numCells; i++) {
@@ -31,7 +31,6 @@ function DurationPickerColumn(props) {
     }
     return {
       offset: 0,
-      columnIsSplit: true,
       cellContents: numbers,
     };
   });
@@ -129,10 +128,6 @@ function DurationPickerColumn(props) {
 
   const alignOffsetToCell = useCallback(
     cellIndex => {
-      // setOffsetState(prevOffsetState => ({
-      //   ...prevOffsetState,
-      //   offset: -1 * (cellIndex - 1) * cellHeight,
-      // }));
       handleSlideColumn(-1 * (cellIndex - 1) * cellHeight);
     },
     [cellHeight, handleSlideColumn]
@@ -154,8 +149,10 @@ function DurationPickerColumn(props) {
         setOffsetState(prevOffsetState => {
           const { bottom, top } = slideyRef.current.getBoundingClientRect();
           return {
-            offset: newOffset + ((ratio >= 0.75 ? 1 : -1) * (bottom - top)) / 2,
-            columnIsSplit: !prevOffsetState.columnIsSplit,
+            offset:
+              newOffset +
+              ((ratio >= 0.75 ? 1 : -1) * (bottom - top)) / 2 +
+              (numCells % 2 === 1 ? (-1 * cellHeight) / 2 : 0),
             cellContents: [
               ...prevOffsetState.cellContents.slice(numCells / 2, numCells),
               ...prevOffsetState.cellContents.slice(0, numCells / 2),
@@ -165,18 +162,17 @@ function DurationPickerColumn(props) {
       } else {
         setOffsetState(prevOffsetState => ({
           offset: newOffset,
-          columnIsSplit: prevOffsetState.columnIsSplit,
           cellContents: prevOffsetState.cellContents,
         }));
       }
     },
-    [numCells, calculateOffsetToColumnRatio]
+    [numCells, cellHeight, calculateOffsetToColumnRatio]
   );
 
   // ********* EFFECTS ********* //
 
   useEffect(() => {
-    // set up initial position configuration of slidey,
+    // set up initial position configuration of slidey
     alignOffsetToCell(props.initial);
 
     // eslint-disable-next-line react/destructuring-assignment
