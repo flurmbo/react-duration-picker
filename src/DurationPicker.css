@@ -47,6 +47,9 @@
 }
 
 .reticule {
+  border: 0;
+  border-top: 2px solid rgba(109, 202, 236, 1);
+  height: 2px;
   position: absolute;
   width: 80%;
   margin: 0;
@@ -54,7 +57,6 @@
   left: 50%;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  border-color: rgba(109, 202, 236, 1);
 }
 
 .textOverlay {
