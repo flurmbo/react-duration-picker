@@ -52,7 +52,7 @@ function AppModal(props) {
         <DurationPicker
           onChange={onChange}
           initialDuration={initialDuration || { hours: 0, mins: 0, secs: 0 }}
-          maxHours={9}
+          maxHours={10}
         />
       </div>
       <button
