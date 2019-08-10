@@ -177,12 +177,31 @@ function DurationPickerColumn(props) {
   // ********* EFFECTS ********* //
 
   useEffect(() => {
-    // set up initial position configuration of slidey and measure slidey
+    // set up initial position configuration of slidey, then measure slidey
     alignOffsetToCell(props.initial);
     const boundingClientRect = slideyRef.current.getBoundingClientRect();
     setSlideyRectHeight(boundingClientRect.bottom - boundingClientRect.top);
     // eslint-disable-next-line react/destructuring-assignment
   }, [alignOffsetToCell, props.initial, slideyRectHeight]);
+
+  useEffect(() => {
+    // when offset config is changed, update current selection
+    const currentSelection = getCurrentSelection(
+      offsetState.offset,
+      offsetState.cellContents
+    );
+    if (currentSelectionRef.current !== currentSelection) {
+      currentSelectionRef.current = currentSelection;
+      onChange(currentSelection);
+    }
+    offsetStateRef.current = offsetState;
+  }, [getCurrentSelection, offsetState, onChange]);
+
+  useEffect(() => {
+    lastClientYRef.current = lastClientY;
+  }, [lastClientY]);
+
+  // ********* MOUSE AND KEYBOARD EFFECTS ********* //
 
   useEffect(() => {
     if (isMouseDown !== isMouseDownRef.current) {
@@ -220,24 +239,7 @@ function DurationPickerColumn(props) {
     mouseUpHandler,
   ]);
 
-  useEffect(() => {
-    // when offset config is changed, update current selection
-    const currentSelection = getCurrentSelection(
-      offsetState.offset,
-      offsetState.cellContents
-    );
-    if (currentSelectionRef.current !== currentSelection) {
-      currentSelectionRef.current = currentSelection;
-      onChange(currentSelection);
-    }
-    offsetStateRef.current = offsetState;
-  }, [getCurrentSelection, offsetState, onChange]);
-
-  useEffect(() => {
-    lastClientYRef.current = lastClientY;
-  }, [lastClientY]);
-
-  // ********* RENDER COMPONENT ********* //
+  // ********* RENDER ********* //
 
   const cells = offsetState.cellContents.map(value => {
     return (

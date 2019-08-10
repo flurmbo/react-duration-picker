@@ -55,30 +55,26 @@ function DurationPicker(props) {
     console.log(`${duration.hours} ${duration.mins} ${duration.secs}`);
     onChange(duration);
   }, [duration, onChange]);
-
   return (
     <div className="picker">
-      {/* <DurationPickerColumn
-        onChange={hours =>
-          setDuration(prevDuration => ({ ...prevDuration, hours }))
-        }
+      <DurationPickerColumn
+        onChange={onChangeHours}
         unit="hours"
         maxHours={maxHours}
         isSmallScreen={isSmallScreen}
         initial={initialDuration.hours}
       />
       <DurationPickerColumn
-        onChange={mins =>
-          setDuration(prevDuration => ({ ...prevDuration, mins }))
-        }
+        onChange={onChangeMins}
         unit="mins"
         isSmallScreen={isSmallScreen}
         initial={initialDuration.mins}
-      /> */}
+      />
       <DurationPickerColumn
         onChange={onChangeSecs}
         unit="secs"
         isSmallScreen={isSmallScreen}
+        initial={initialDuration.secs}
       />
     </div>
   );
