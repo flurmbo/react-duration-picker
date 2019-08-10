@@ -32,7 +32,7 @@ function DurationPickerColumn(props) {
     }
     return {
       offset: 0,
-      inA: true,
+      columnIsSplit: true,
       cellContents: numbers,
     };
   });
@@ -156,7 +156,7 @@ function DurationPickerColumn(props) {
           return {
             offset:
               newOffset + ((ratio >= 0.75 ? 1 : -1) * slideyRectHeight) / 2,
-            inA: !prevOffsetState.inA,
+            columnIsSplit: !prevOffsetState.columnIsSplit,
             cellContents: [
               ...prevOffsetState.cellContents.slice(middleCell, numCells),
               ...prevOffsetState.cellContents.slice(0, middleCell),
@@ -166,7 +166,7 @@ function DurationPickerColumn(props) {
       } else {
         setOffsetState(prevOffsetState => ({
           offset: newOffset,
-          inA: prevOffsetState.inA,
+          columnIsSplit: prevOffsetState.columnIsSplit,
           cellContents: prevOffsetState.cellContents,
         }));
       }
@@ -249,7 +249,7 @@ function DurationPickerColumn(props) {
     );
   });
 
-  console.log(offsetState.inA);
+  console.log(offsetState.columnIsSplit);
 
   return (
     <div
