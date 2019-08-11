@@ -2,7 +2,7 @@ React duration picker for mobile, inspired by Android number pickers. A live dem
 
 # Installation
 
-Currently you'll have to clone the repository yourself from Github. I hope to add the project to the npm registry in the near future.
+Currently you'll have to clone the repository yourself from Github. The project will be added to the npm registry in the near future.
 
 # Usage
 
