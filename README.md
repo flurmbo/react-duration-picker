@@ -7,10 +7,19 @@ Currently you'll have to clone the repository yourself from Github. The project 
 # Usage
 
 ```javascript
-import DurationPicker from "react-duration-picker";
-...
+const onChange = (duration) => {
+  const { hours, minutes, seconds } = duration;
+  setState({ hours, minutes, seconds });
+}
+
 return (
-  <DurationPicker onChange={onChange} />
+  <Modal open={isOpen}>
+  <DurationPicker
+
+    onChange={onChange} />
+    maxHours={5}
+    <button onClick={closeModal}
+  </Modal>
 )
 ```
 
