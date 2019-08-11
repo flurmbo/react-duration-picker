@@ -7,19 +7,21 @@ Currently you'll have to clone the repository yourself from Github. The project 
 # Usage
 
 ```javascript
-const onChange = (duration) => {
+const onChange = duration => {
   const { hours, minutes, seconds } = duration;
   setState({ hours, minutes, seconds });
-}
+};
 
 return (
   <Modal open={isOpen}>
-  <DurationPicker
-    onChange={onChange} />
-    maxHours={5}
-    <button onClick={closeModal}
+    <DurationPicker
+      onChange={onChange}
+      initialDuration={{ hours: 1, minutes: 2, seconds: 3 }}
+      maxHours={5}
+    />
+    <button onClick={closeModal} />
   </Modal>
-)
+);
 ```
 
 # Contributing
