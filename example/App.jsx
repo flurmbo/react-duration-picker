@@ -14,7 +14,7 @@ function App() {
     setIsOpen(true);
     setHasOpenedModal(true);
   };
-  const { hours, mins, secs } = durationDisplayedInText || {};
+  const { hours, minutes, seconds } = durationDisplayedInText || {};
   return (
     <React.Fragment>
       <h1>React Duration Picker</h1>
@@ -28,9 +28,9 @@ function App() {
         {hasOpenedModal && durationDisplayedInText
           ? `You have selected a duration of ${hours} hour${
               hours !== 1 ? "s" : ""
-            }, ${mins} minute${mins !== 1 ? "s" : ""}, and ${secs} second${
-              secs !== 1 ? "s" : ""
-            }.`
+            }, ${minutes} minute${
+              minutes !== 1 ? "s" : ""
+            }, and ${seconds} second${seconds !== 1 ? "s" : ""}.`
           : "Click the button on the right to select a duration."}
         <button style={{ marginLeft: 10 }} onClick={onOpenModal} type="button">
           Select Duration

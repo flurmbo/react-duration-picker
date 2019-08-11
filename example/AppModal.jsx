@@ -11,13 +11,13 @@ AppModal.propTypes = {
   onCloseModal: PropTypes.func.isRequired,
   initialDuration: PropTypes.shape({
     hours: PropTypes.number,
-    mins: PropTypes.number,
-    secs: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
   }),
 };
 
 AppModal.defaultProps = {
-  initialDuration: { hours: 0, mins: 0, secs: 0 },
+  initialDuration: { hours: 0, minutes: 0, seconds: 0 },
 };
 
 function AppModal(props) {
@@ -51,7 +51,9 @@ function AppModal(props) {
       <div>
         <DurationPicker
           onChange={onChange}
-          initialDuration={initialDuration || { hours: 0, mins: 0, secs: 0 }}
+          initialDuration={
+            initialDuration || { hours: 0, minutes: 0, seconds: 0 }
+          }
           maxHours={10}
         />
       </div>

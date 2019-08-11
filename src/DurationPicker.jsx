@@ -7,8 +7,8 @@ DurationPicker.propTypes = {
   onChange: PropTypes.func,
   initialDuration: PropTypes.shape({
     hours: PropTypes.number,
-    mins: PropTypes.number,
-    secs: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
   }),
   maxHours: PropTypes.number,
 };
@@ -16,7 +16,7 @@ DurationPicker.propTypes = {
 DurationPicker.defaultProps = {
   maxHours: 10,
   onChange: () => {},
-  initialDuration: { hours: 0, mins: 0, secs: 0 },
+  initialDuration: { hours: 0, minutes: 0, seconds: 0 },
 };
 
 function DurationPicker(props) {
@@ -28,11 +28,11 @@ function DurationPicker(props) {
   const onChangeHours = useCallback(hours => {
     setDuration(prevDuration => ({ ...prevDuration, hours }));
   }, []);
-  const onChangeMins = useCallback(mins => {
-    setDuration(prevDuration => ({ ...prevDuration, mins }));
+  const onChangeMinutes = useCallback(minutes => {
+    setDuration(prevDuration => ({ ...prevDuration, minutes }));
   }, []);
-  const onChangeSecs = useCallback(secs => {
-    setDuration(prevDuration => ({ ...prevDuration, secs }));
+  const onChangeSeconds = useCallback(seconds => {
+    setDuration(prevDuration => ({ ...prevDuration, seconds }));
   }, []);
 
   // add/remove resize listener and measure screen size
@@ -52,7 +52,6 @@ function DurationPicker(props) {
 
   // execute callback prop
   useEffect(() => {
-    // console.log(`${duration.hours} ${duration.mins} ${duration.secs}`);
     onChange(duration);
   }, [duration, onChange]);
   return (
@@ -65,16 +64,16 @@ function DurationPicker(props) {
         initial={initialDuration.hours}
       />
       <DurationPickerColumn
-        onChange={onChangeMins}
+        onChange={onChangeMinutes}
         unit="mins"
         isSmallScreen={isSmallScreen}
-        initial={initialDuration.mins}
+        initial={initialDuration.minutes}
       />
       <DurationPickerColumn
-        onChange={onChangeSecs}
+        onChange={onChangeSeconds}
         unit="secs"
         isSmallScreen={isSmallScreen}
-        initial={initialDuration.secs}
+        initial={initialDuration.seconds}
       />
     </div>
   );
