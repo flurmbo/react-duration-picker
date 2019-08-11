@@ -133,18 +133,19 @@ function DurationPickerColumn(props) {
     [cellHeight, handleSlideColumn]
   );
 
-  const calculateOffsetToColumnRatio = useCallback(() => {
+  const calculateOffsetToColumnRatio = useCallback(newOffset => {
+    const delta = newOffset - offsetStateRef.current.offset;
     const slideyRect = slideyRef.current.getBoundingClientRect();
     const containerRect = containerRef.current.getBoundingClientRect();
     const middleOfContainer = (containerRect.bottom + containerRect.top) / 2;
-    const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top;
+    const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top - delta;
     const slideyRectHeight = slideyRect.bottom - slideyRect.top;
     return middleOfVisibleSlideyBit / slideyRectHeight;
   }, []);
 
   const handleSlideColumn = useCallback(
     newOffset => {
-      const ratio = calculateOffsetToColumnRatio();
+      const ratio = calculateOffsetToColumnRatio(newOffset);
       if (ratio >= 0.75 || ratio <= 0.25) {
         setOffsetState(prevOffsetState => {
           const { bottom, top } = slideyRef.current.getBoundingClientRect();
@@ -172,13 +173,6 @@ function DurationPickerColumn(props) {
   // ********* EFFECTS ********* //
 
   useEffect(() => {
-    // set up initial position configuration of slidey
-    alignOffsetToCell(props.initial);
-
-    // eslint-disable-next-line react/destructuring-assignment
-  }, [alignOffsetToCell, props.initial]);
-
-  useEffect(() => {
     // when offset config is changed, update current selection
     const currentSelection = getCurrentSelection(
       offsetState.offset,
@@ -190,6 +184,13 @@ function DurationPickerColumn(props) {
     }
     offsetStateRef.current = offsetState;
   }, [getCurrentSelection, offsetState, onChange]);
+
+  useEffect(() => {
+    // set up initial position configuration of slidey
+    alignOffsetToCell(props.initial);
+
+    // eslint-disable-next-line react/destructuring-assignment
+  }, [alignOffsetToCell, props.initial]);
 
   useEffect(() => {
     lastClientYRef.current = lastClientY;
