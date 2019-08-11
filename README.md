@@ -15,7 +15,6 @@ const onChange = (duration) => {
 return (
   <Modal open={isOpen}>
   <DurationPicker
-
     onChange={onChange} />
     maxHours={5}
     <button onClick={closeModal}
