@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --mode=development --config-name=example --content-base public",
+    "dev-lan": "webpack-dev-server --mode=development --config-name=example --content-base public --host `hostname -I`",
     "build-examples": "webpack --mode=production --config-name=example",
     "build": "webpack --mode=production --config-name=production"
   },
