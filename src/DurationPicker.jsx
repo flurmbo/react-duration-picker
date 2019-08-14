@@ -56,7 +56,7 @@ function DurationPicker(props) {
   }, [duration, onChange]);
   return (
     <div className="picker">
-      <DurationPickerColumn
+      {/* <DurationPickerColumn
         onChange={onChangeHours}
         unit="hours"
         maxHours={maxHours}
@@ -68,7 +68,7 @@ function DurationPicker(props) {
         unit="mins"
         isSmallScreen={isSmallScreen}
         initial={initialDuration.minutes}
-      />
+      /> */}
       <DurationPickerColumn
         onChange={onChangeSeconds}
         unit="secs"

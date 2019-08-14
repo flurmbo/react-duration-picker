@@ -20,6 +20,7 @@ DurationPickerColumn.defaultProps = {
 };
 
 function DurationPickerColumn(props) {
+  console.log("the function is running!");
   // ********* STATE VARIABLES, PROPS, REFS ********* //
   const { onChange, isSmallScreen, unit, maxHours, cellHeight } = props;
   const [columnIsFocused, setColumnIsFocused] = useState(false);
@@ -33,6 +34,7 @@ function DurationPickerColumn(props) {
     return {
       offset: 0,
       cellContents: numbers,
+      initialAlignmentHasHappened: false,
     };
   });
 
@@ -129,11 +131,19 @@ function DurationPickerColumn(props) {
   );
 
   const alignOffsetToCell = useCallback(
-    cellIndex => {
+    (cellIndex, isInitial) => {
       setOffsetState(prevOffsetState => {
+        console.log(
+          `about to align to index ${cellIndex} with offset ${-1 *
+            (cellIndex - 1) *
+            cellHeight}`
+        );
         return {
           ...prevOffsetState,
           offset: -1 * (cellIndex - 1) * cellHeight,
+          initialAlignmentHasHappened: isInitial
+            ? true
+            : prevOffsetState.initialAlignmentHasHappened,
         };
       });
     },
@@ -149,22 +159,25 @@ function DurationPickerColumn(props) {
     return middleOfVisibleSlideyBit / slideyRectHeight;
   }, []);
 
-  const handleSlideColumn = useCallback(
+  const handleShuffleColumn = useCallback(
     newOffset => {
+      console.log(`newOffset is ${newOffset}`);
       const ratio = calculateOffsetToColumnRatio();
       if (ratio >= 0.75 || ratio <= 0.25) {
         setOffsetState(prevOffsetState => {
           const { bottom, top } = slideyRef.current.getBoundingClientRect();
-          return {
+          const newNew = {
             offset:
               newOffset +
               ((ratio >= 0.75 ? 1 : -1) * (bottom - top)) / 2 +
-              (numCells % 2 === 1 ? (-1 * cellHeight) / 2 : 0),
+              (numCells % 2 === 1 ? (-1 * cellHeight) / 2 : 0), // extra bit when num cells is odd
             cellContents: [
               ...prevOffsetState.cellContents.slice(numCells / 2, numCells),
               ...prevOffsetState.cellContents.slice(0, numCells / 2),
             ],
           };
+          console.log(`about to set offset to ${newNew.offset}`);
+          return newNew;
         });
       }
     },
@@ -174,8 +187,20 @@ function DurationPickerColumn(props) {
   // ********* EFFECTS ********* //
 
   useEffect(() => {
+    // set up initial position configuration of slidey
+    console.log(`${props.initial}is initial`);
+    alignOffsetToCell(props.initial, true);
+
+    // eslint-disable-next-line react/destructuring-assignment
+  }, [alignOffsetToCell, props.initial]);
+
+  useEffect(() => {
     // when offset config is changed, check if need to adjust slidey and update current selection
-    handleSlideColumn(offsetState.offset);
+    offsetStateRef.current = offsetState;
+    console.log(`the offset we get now is ${offsetState.offset}`);
+    if (offsetState.initialAlignmentHasHappened) {
+      handleShuffleColumn(offsetState.offset);
+    }
     const currentSelection = getCurrentSelection(
       offsetState.offset,
       offsetState.cellContents
@@ -184,15 +209,7 @@ function DurationPickerColumn(props) {
       currentSelectionRef.current = currentSelection;
       onChange(currentSelection);
     }
-    offsetStateRef.current = offsetState;
-  }, [getCurrentSelection, handleSlideColumn, offsetState, onChange]);
-
-  useEffect(() => {
-    // set up initial position configuration of slidey
-    alignOffsetToCell(props.initial);
-
-    // eslint-disable-next-line react/destructuring-assignment
-  }, [alignOffsetToCell, props.initial]);
+  }, [getCurrentSelection, handleShuffleColumn, offsetState, onChange]);
 
   useEffect(() => {
     lastClientYRef.current = lastClientY;
@@ -245,7 +262,6 @@ function DurationPickerColumn(props) {
       </div>
     );
   });
-
   return (
     <div
       className="columnContainer"
