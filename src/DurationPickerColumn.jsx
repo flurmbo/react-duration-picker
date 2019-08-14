@@ -20,7 +20,6 @@ DurationPickerColumn.defaultProps = {
 };
 
 function DurationPickerColumn(props) {
-  console.log("the function is running!");
   // ********* STATE VARIABLES, PROPS, REFS ********* //
   const { onChange, isSmallScreen, unit, maxHours, cellHeight } = props;
   const [columnIsFocused, setColumnIsFocused] = useState(false);
@@ -133,11 +132,6 @@ function DurationPickerColumn(props) {
   const alignOffsetToCell = useCallback(
     (cellIndex, isInitial) => {
       setOffsetState(prevOffsetState => {
-        console.log(
-          `about to align to index ${cellIndex} with offset ${-1 *
-            (cellIndex - 1) *
-            cellHeight}`
-        );
         return {
           ...prevOffsetState,
           offset: -1 * (cellIndex - 1) * cellHeight,
@@ -161,12 +155,11 @@ function DurationPickerColumn(props) {
 
   const handleShuffleColumn = useCallback(
     newOffset => {
-      console.log(`newOffset is ${newOffset}`);
       const ratio = calculateOffsetToColumnRatio();
       if (ratio >= 0.75 || ratio <= 0.25) {
         setOffsetState(prevOffsetState => {
           const { bottom, top } = slideyRef.current.getBoundingClientRect();
-          const newNew = {
+          return {
             offset:
               newOffset +
               ((ratio >= 0.75 ? 1 : -1) * (bottom - top)) / 2 +
@@ -176,8 +169,6 @@ function DurationPickerColumn(props) {
               ...prevOffsetState.cellContents.slice(0, numCells / 2),
             ],
           };
-          console.log(`about to set offset to ${newNew.offset}`);
-          return newNew;
         });
       }
     },
@@ -188,7 +179,6 @@ function DurationPickerColumn(props) {
 
   useEffect(() => {
     // set up initial position configuration of slidey
-    console.log(`${props.initial}is initial`);
     alignOffsetToCell(props.initial, true);
 
     // eslint-disable-next-line react/destructuring-assignment
@@ -197,7 +187,6 @@ function DurationPickerColumn(props) {
   useEffect(() => {
     // when offset config is changed, check if need to adjust slidey and update current selection
     offsetStateRef.current = offsetState;
-    console.log(`the offset we get now is ${offsetState.offset}`);
     if (offsetState.initialAlignmentHasHappened) {
       handleShuffleColumn(offsetState.offset);
     }
