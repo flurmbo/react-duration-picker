@@ -55,7 +55,6 @@ function DurationPickerColumn(props) {
   const moveHandler = useCallback(e => {
     e.preventDefault();
     const position = e.touches ? e.touches[0].clientY : e.clientY;
-    console.log("setting offset state!");
     setOffsetState(prevOffsetState => {
       return {
         ...prevOffsetState,
@@ -131,7 +130,6 @@ function DurationPickerColumn(props) {
 
   const alignOffsetToCell = useCallback(
     cellIndex => {
-      console.log("aligning...");
       setOffsetState(prevOffsetState => {
         return {
           ...prevOffsetState,
@@ -142,19 +140,18 @@ function DurationPickerColumn(props) {
     [cellHeight]
   );
 
-  const calculateOffsetToColumnRatio = useCallback(newOffset => {
-    const delta = newOffset - offsetStateRef.current.offset;
+  const calculateOffsetToColumnRatio = useCallback(() => {
     const slideyRect = slideyRef.current.getBoundingClientRect();
     const containerRect = containerRef.current.getBoundingClientRect();
     const middleOfContainer = (containerRect.bottom + containerRect.top) / 2;
-    const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top - delta;
+    const middleOfVisibleSlideyBit = middleOfContainer - slideyRect.top;
     const slideyRectHeight = slideyRect.bottom - slideyRect.top;
     return middleOfVisibleSlideyBit / slideyRectHeight;
   }, []);
 
   const handleSlideColumn = useCallback(
     newOffset => {
-      const ratio = calculateOffsetToColumnRatio(newOffset);
+      const ratio = calculateOffsetToColumnRatio();
       if (ratio >= 0.75 || ratio <= 0.25) {
         setOffsetState(prevOffsetState => {
           const { bottom, top } = slideyRef.current.getBoundingClientRect();
@@ -169,11 +166,6 @@ function DurationPickerColumn(props) {
             ],
           };
         });
-      } else {
-        setOffsetState(prevOffsetState => ({
-          offset: newOffset,
-          cellContents: prevOffsetState.cellContents,
-        }));
       }
     },
     [numCells, cellHeight, calculateOffsetToColumnRatio]
@@ -183,7 +175,7 @@ function DurationPickerColumn(props) {
 
   useEffect(() => {
     // when offset config is changed, check if need to adjust slidey and update current selection
-    console.log(offsetState);
+    handleSlideColumn(offsetState.offset);
     const currentSelection = getCurrentSelection(
       offsetState.offset,
       offsetState.cellContents
@@ -193,7 +185,7 @@ function DurationPickerColumn(props) {
       onChange(currentSelection);
     }
     offsetStateRef.current = offsetState;
-  }, [getCurrentSelection, offsetState, onChange]);
+  }, [getCurrentSelection, handleSlideColumn, offsetState, onChange]);
 
   useEffect(() => {
     // set up initial position configuration of slidey
