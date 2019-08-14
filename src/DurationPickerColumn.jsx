@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { toTwoDigitString } from "./utils";
 
+let k = 0;
 DurationPickerColumn.propTypes = {
   onChange: PropTypes.func.isRequired,
   // note that 'minutes' and 'seconds' are abbreviated in this prop
@@ -44,12 +45,16 @@ function DurationPickerColumn(props) {
   const slideyRef = useRef(null);
   const containerRef = useRef(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isTouchInProgress, setIsTouchInProgress] = useState(false);
   const isMouseDownRef = useRef(false);
 
   // ********* EVENT HANDLERS ********* //
 
   function startHandler(e) {
     e.preventDefault();
+    if (e.touches) {
+      setIsTouchInProgress(true);
+    }
     setLastClientY(e.touches ? e.touches[0].clientY : e.clientY);
   }
 
@@ -65,16 +70,10 @@ function DurationPickerColumn(props) {
     setLastClientY(position);
   }, []);
 
-  const endHandler = useCallback(
-    e => {
-      e.preventDefault();
-      const { offset } = offsetStateRef.current;
-      // align current selection to center
-      const currentSelectionIndex = getCurrentSelectionIndex(offset);
-      alignOffsetToCell(currentSelectionIndex);
-    },
-    [alignOffsetToCell, getCurrentSelectionIndex]
-  );
+  const endHandler = useCallback(e => {
+    e.preventDefault();
+    setIsTouchInProgress(false);
+  }, []);
 
   const mouseDownHandler = useCallback(e => {
     startHandler(e);
@@ -157,6 +156,7 @@ function DurationPickerColumn(props) {
     newOffset => {
       const ratio = calculateOffsetToColumnRatio();
       if (ratio >= 0.75 || ratio <= 0.25) {
+        k += 1;
         setOffsetState(prevOffsetState => {
           const { bottom, top } = slideyRef.current.getBoundingClientRect();
           return {
@@ -168,6 +168,8 @@ function DurationPickerColumn(props) {
               ...prevOffsetState.cellContents.slice(numCells / 2, numCells),
               ...prevOffsetState.cellContents.slice(0, numCells / 2),
             ],
+            initialAlignmentHasHappened:
+              prevOffsetState.initialAlignmentHasHappened,
           };
         });
       }
@@ -204,13 +206,28 @@ function DurationPickerColumn(props) {
     lastClientYRef.current = lastClientY;
   }, [lastClientY]);
 
-  // ********* MOUSE AND KEYBOARD EFFECTS ********* //
+  useEffect(() => {
+    if (!isTouchInProgress) {
+      const { offset } = offsetStateRef.current;
+      const currentSelectionIndex = getCurrentSelectionIndex(offset);
+      alignOffsetToCell(currentSelectionIndex);
+    }
+  }, [alignOffsetToCell, getCurrentSelectionIndex, isTouchInProgress]);
 
   useEffect(() => {
     if (isMouseDown !== isMouseDownRef.current) {
       isMouseDownRef.current = isMouseDown;
     }
-  }, [isMouseDown]);
+    if (!isMouseDown) {
+      const { offset } = offsetStateRef.current;
+      const currentSelectionIndex = getCurrentSelectionIndex(offset);
+      alignOffsetToCell(currentSelectionIndex);
+    }
+  }, [alignOffsetToCell, getCurrentSelectionIndex, isMouseDown]);
+
+  // ********* MOUSE AND KEYBOARD EFFECTS ********* //
+
+  useEffect(() => {}, [isMouseDown]);
 
   useEffect(() => {
     if (columnIsFocused !== columnIsFocusedRef.current) {
