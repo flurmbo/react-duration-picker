@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { toTwoDigitString } from "./utils";
 
-let k = 0;
 DurationPickerColumn.propTypes = {
   onChange: PropTypes.func.isRequired,
   // note that 'minutes' and 'seconds' are abbreviated in this prop
@@ -103,7 +102,6 @@ function DurationPickerColumn(props) {
     e => {
       if (columnIsFocusedRef.current) {
         const { code } = e;
-        console.log(getCurrentSelectionIndex(offsetStateRef.current.offset));
         if (code === "ArrowUp") {
           alignOffsetToCell(
             getCurrentSelectionIndex(offsetStateRef.current.offset) - 1
