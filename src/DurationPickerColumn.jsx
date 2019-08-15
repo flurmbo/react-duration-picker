@@ -99,11 +99,24 @@ function DurationPickerColumn(props) {
     [endHandler]
   );
 
-  const keyDownHandler = useCallback(e => {
-    if (columnIsFocusedRef.current) {
-      console.log(`key down and key is ${e.code}`);
-    }
-  }, []);
+  const keyDownHandler = useCallback(
+    e => {
+      if (columnIsFocusedRef.current) {
+        const { code } = e;
+        console.log(getCurrentSelectionIndex(offsetStateRef.current.offset));
+        if (code === "ArrowUp") {
+          alignOffsetToCell(
+            getCurrentSelectionIndex(offsetStateRef.current.offset) - 1
+          );
+        } else if (code === "ArrowDown") {
+          alignOffsetToCell(
+            getCurrentSelectionIndex(offsetStateRef.current.offset) + 1
+          );
+        }
+      }
+    },
+    [alignOffsetToCell, getCurrentSelectionIndex]
+  );
 
   const focusInHandler = useCallback(() => {
     setColumnIsFocused(true);
