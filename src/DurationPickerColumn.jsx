@@ -167,7 +167,6 @@ function DurationPickerColumn(props) {
     newOffset => {
       const ratio = calculateOffsetToColumnRatio();
       if (ratio >= 0.75 || ratio <= 0.25) {
-        k += 1;
         setOffsetState(prevOffsetState => {
           const { bottom, top } = slideyRef.current.getBoundingClientRect();
           return {
