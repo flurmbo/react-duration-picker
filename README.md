@@ -1,10 +1,22 @@
-React duration picker for mobile, inspired by Android number pickers. A live demo is available [here](https://flurmbo.github.io/react-duration-picker).
+React duration picker for mobile, inspired by Android number pickers. A live demo is available [here](https://flurmbo.github.io/react-duration-picker). Supports keyboard and mouse events in addition to touch. A type declaration file is also included.
 
 # Installation
 
-Currently you'll have to clone the repository yourself from Github. The project will be added to the npm registry in the near future.
+`npm install react-duration-picker`
 
-# Usage
+Then in your React component:
+
+`import DurationPicker from 'react-duration-picker'`
+
+# API
+
+| Prop            | Type                                                        | Default                            | Description                                                                                  |
+| --------------- | ----------------------------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------- |
+| onChange        | ({hours: number, minutes: number, seconds: number}) => void | () => {}                           | Callback executed by DurationPicker whenever the duration displayed on the picker is updated |
+| initialDuration | {hours: number, minutes: number, seconds: number}           | {hours: 0, minutes: 0, seconds: 0} | Duration to display on first render                                                          |
+| maxHours        | number                                                      | 10                                 | Max number of hours that can be selected                                                     |
+
+# Example
 
 ```javascript
 const onChange = duration => {
@@ -23,6 +35,8 @@ return (
   </Modal>
 );
 ```
+
+The `/example` directory contains the code for the demo.
 
 # Contributing
 
