@@ -56,7 +56,7 @@ function DurationPicker(props) {
     onChange(duration);
   }, [duration, onChange]);
   return (
-    <div className="picker">
+    <div className="rdp-picker">
       <DurationPickerColumn
         onChange={onChangeHours}
         unit="hours"

@@ -1,4 +1,4 @@
-.picker {
+.rdp-picker {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -10,12 +10,12 @@
 }
 
 @media (max-width: 400px) {
-  .picker {
+  .rdp-picker {
     width: 250px;
   }
 }
 
-.maskedImageDiv {
+.rdp-masked-div {
   color: black;
   overflow: hidden;
   height: 105px;
@@ -36,13 +36,13 @@
   );
 }
 
-.columnContainer {
+.rdp-column-container {
   flex-grow: 1;
   display: inline-block;
   touch-action: none;
 }
 
-.column {
+.rdp-column {
   position: absolute;
   pointer-events: none;
   touch-action: none;
@@ -50,7 +50,7 @@
   width: 100%;
 }
 
-.reticule {
+.rdp-reticule {
   border: 0;
   border-top: 2px solid rgba(109, 202, 236, 1);
   height: 2px;
@@ -63,7 +63,7 @@
   transform: translateX(-50%);
 }
 
-.textOverlay {
+.rdp-text-overlay {
   position: absolute;
   /* font-style: italic; */
   display: flex;
@@ -77,7 +77,7 @@
   transform: translateX(-50%);
 }
 
-.textOverlay div {
+.rdp-text-overlay div {
   font-size: 17px;
   position: relative;
   top: 1px;
@@ -87,7 +87,7 @@
   font-style: italic;
 }
 
-.cell {
+.rdp-cell {
   display: flex;
   align-items: center;
   justify-content: center;

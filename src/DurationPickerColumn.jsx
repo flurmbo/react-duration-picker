@@ -273,14 +273,14 @@ function DurationPickerColumn(props) {
 
   const cells = offsetState.cellContents.map(value => {
     return (
-      <div className="cell" key={value}>
+      <div className="rdp-cell" key={value}>
         {toTwoDigitString(value)}
       </div>
     );
   });
   return (
     <div
-      className="columnContainer"
+      className="rdp-column-container"
       onTouchMove={moveHandler}
       onTouchStart={startHandler}
       onTouchEnd={endHandler}
@@ -292,15 +292,15 @@ function DurationPickerColumn(props) {
       aria-valuenow={currentSelectionRef.current}
       tabIndex={0}
     >
-      <div className="maskedImageDiv">
-        <hr className="reticule" style={{ top: cellHeight - 1 }} />
-        <hr className="reticule" style={{ top: cellHeight * 2 - 1 }} />
-        <div className="textOverlay" style={{ top: cellHeight }}>
+      <div className="rdp-masked-div">
+        <hr className="rdp-reticule" style={{ top: cellHeight - 1 }} />
+        <hr className="rdp-reticule" style={{ top: cellHeight * 2 - 1 }} />
+        <div className="rdp-text-overlay" style={{ top: cellHeight }}>
           {`${toTwoDigitString(currentSelectionRef.current)}`}
           <div>{isSmallScreen ? unit[0] : unit}</div>
         </div>
         <div
-          className="column"
+          className="rdp-column"
           style={{ top: offsetState.offset || 0 }}
           ref={slideyRef}
         >
