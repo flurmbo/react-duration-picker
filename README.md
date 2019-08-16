@@ -36,7 +36,7 @@ return (
 );
 ```
 
-The `/example` directory contains the code for the demo.
+The `example` directory contains the code for the demo.
 
 # Contributing
 
