@@ -1,6 +1,6 @@
 {
   "name": "react-duration-picker",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "React duration picker for mobile, inspired by Android spinners",
   "main": "lib/index.js",
   "repository": {
