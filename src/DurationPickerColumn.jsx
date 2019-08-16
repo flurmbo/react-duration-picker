@@ -281,29 +281,31 @@ function DurationPickerColumn(props) {
   return (
     <div
       className="columnContainer"
-      ref={containerRef}
       onTouchMove={moveHandler}
       onTouchStart={startHandler}
       onTouchEnd={endHandler}
       onMouseDown={mouseDownHandler}
+      ref={containerRef}
       role="slider"
       aria-valuemax={unit === "hours" ? maxHours : 60}
       aria-valuemin={0}
       aria-valuenow={currentSelectionRef.current}
       tabIndex={0}
     >
-      <hr className="reticule" style={{ top: cellHeight - 1 }} />
-      <hr className="reticule" style={{ top: cellHeight * 2 - 1 }} />
-      <div className="textOverlay" style={{ top: cellHeight }}>
-        {`${toTwoDigitString(currentSelectionRef.current)}`}
-        <div>{isSmallScreen ? unit[0] : unit}</div>
-      </div>
-      <div
-        className="column"
-        style={{ top: offsetState.offset || 0 }}
-        ref={slideyRef}
-      >
-        {cells}
+      <div className="maskedImageDiv">
+        <hr className="reticule" style={{ top: cellHeight - 1 }} />
+        <hr className="reticule" style={{ top: cellHeight * 2 - 1 }} />
+        <div className="textOverlay" style={{ top: cellHeight }}>
+          {`${toTwoDigitString(currentSelectionRef.current)}`}
+          <div>{isSmallScreen ? unit[0] : unit}</div>
+        </div>
+        <div
+          className="column"
+          style={{ top: offsetState.offset || 0 }}
+          ref={slideyRef}
+        >
+          {cells}
+        </div>
       </div>
     </div>
   );

@@ -14,11 +14,8 @@
   }
 }
 
-.columnContainer {
-  flex-grow: 1;
+.maskedImageDiv {
   color: black;
-  display: inline-block;
-  touch-action: none;
   overflow: hidden;
   height: 105px;
   position: relative;
@@ -36,6 +33,12 @@
     90%,
     transparent
   );
+}
+
+.columnContainer {
+  flex-grow: 1;
+  display: inline-block;
+  touch-action: none;
 }
 
 .column {
