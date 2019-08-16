@@ -6,39 +6,39 @@ module.exports = [
     name: "production",
     entry: "./src/index.js",
     output: {
-      path: path.resolve(__dirname, "build"),
+      path: path.resolve(__dirname, "lib"),
       filename: "index.js",
-      libraryTarget: "commonjs2"
+      libraryTarget: "commonjs2",
     },
     module: {
       rules: [
         {
           test: /\.js|jsx$/,
           include: path.resolve(__dirname, "src"),
-          exclude: /(node_modules|build)/,
+          exclude: /(node_modules|lib)/,
           use: [
             {
               loader: "babel-loader",
               options: {
-                presets: ["@babel/preset-env"]
-              }
+                presets: ["@babel/preset-env"],
+              },
             },
-            { loader: "eslint-loader" }
-          ]
+            { loader: "eslint-loader" },
+          ],
         },
         {
           test: /\.css$/,
           exclude: /node_modules/,
-          use: [{ loader: "style-loader" }, { loader: "css-loader" }]
-        }
-      ]
+          use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+        },
+      ],
     },
     resolve: {
-      extensions: [".js", ".jsx"]
+      extensions: [".js", ".jsx"],
     },
     externals: {
-      react: "commonjs react"
-    }
+      react: "commonjs react",
+    },
   },
   {
     name: "example",
@@ -46,7 +46,7 @@ module.exports = [
     output: {
       path: path.resolve(__dirname, "public"),
       filename: "bundle.js",
-      publicPath: "/"
+      publicPath: "/",
     },
     module: {
       rules: [
@@ -54,36 +54,36 @@ module.exports = [
           test: /\.js|jsx$/,
           include: [
             path.resolve(__dirname, "example"),
-            path.resolve(__dirname, "src")
+            path.resolve(__dirname, "src"),
           ],
-          exclude: /(node_modules|build)/,
+          exclude: /(node_modules|lib)/,
           use: [
             {
               loader: "babel-loader",
               options: {
-                presets: ["@babel/preset-env"]
-              }
+                presets: ["@babel/preset-env"],
+              },
             },
-            { loader: "eslint-loader" }
-          ]
+            { loader: "eslint-loader" },
+          ],
         },
         {
           test: /\.css$/,
-          use: ["style-loader", "css-loader"]
-        }
-      ]
+          use: ["style-loader", "css-loader"],
+        },
+      ],
     },
     resolve: {
-      extensions: [".js", ".jsx"]
+      extensions: [".js", ".jsx"],
     },
     plugins: [
       new HtmlWebPackPlugin({
         template: "./example/index.html",
-        filename: "./index.html"
-      })
+        filename: "./index.html",
+      }),
     ],
     devServer: {
-      publicPath: "/"
-    }
-  }
+      publicPath: "/",
+    },
+  },
 ];
