@@ -6,6 +6,7 @@
   user-select: none;
   height: 105px;
   width: 330px;
+  background-color: white;
 }
 
 @media (max-width: 400px) {
