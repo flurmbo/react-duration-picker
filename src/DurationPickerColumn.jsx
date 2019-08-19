@@ -44,9 +44,9 @@ function DurationPickerColumn(props) {
   const slideyRef = useRef(null);
   const containerRef = useRef(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [isTouchInProgress, setIsTouchInProgress] = useState(false);
   const isMouseDownRef = useRef(false);
-
+  const [isTouchInProgress, setIsTouchInProgress] = useState(false);
+  const isTouchInProgressRef = useRef(false);
   // ********* EVENT HANDLERS ********* //
 
   function startHandler(e) {
@@ -217,22 +217,21 @@ function DurationPickerColumn(props) {
   }, [lastClientY]);
 
   useEffect(() => {
-    if (!isTouchInProgress) {
+    if (!isTouchInProgress && isTouchInProgressRef.current) {
       const { offset } = offsetStateRef.current;
       const currentSelectionIndex = getCurrentSelectionIndex(offset);
       alignOffsetToCell(currentSelectionIndex);
     }
+    isTouchInProgressRef.current = isTouchInProgress;
   }, [alignOffsetToCell, getCurrentSelectionIndex, isTouchInProgress]);
 
   useEffect(() => {
-    if (isMouseDown !== isMouseDownRef.current) {
-      isMouseDownRef.current = isMouseDown;
-    }
-    if (!isMouseDown) {
+    if (!isMouseDown && isMouseDownRef.current) {
       const { offset } = offsetStateRef.current;
       const currentSelectionIndex = getCurrentSelectionIndex(offset);
       alignOffsetToCell(currentSelectionIndex);
     }
+    isMouseDownRef.current = isMouseDown;
   }, [alignOffsetToCell, getCurrentSelectionIndex, isMouseDown]);
 
   // ********* MOUSE AND KEYBOARD EFFECTS ********* //
