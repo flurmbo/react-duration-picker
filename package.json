@@ -1,6 +1,6 @@
 {
   "name": "react-duration-picker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React duration picker for mobile, inspired by Android spinners",
   "main": "lib/index.js",
   "repository": {
@@ -15,6 +15,12 @@
   },
   "author": "Phil Marshall <@flurmbo>",
   "license": "MIT",
+  "keywords": [
+    "react",
+    "picker",
+    "react-component",
+    "react-mobile"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",

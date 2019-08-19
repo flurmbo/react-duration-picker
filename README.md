@@ -1,5 +1,7 @@
 React duration picker for mobile, inspired by Android number pickers. A live demo is available [here](https://flurmbo.github.io/react-duration-picker). Supports keyboard and mouse events in addition to touch. A type declaration file is also included.
 
+![](usage.gif)
+
 # Installation
 
 `npm install react-duration-picker`
