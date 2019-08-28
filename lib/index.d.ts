@@ -1,8 +1,6 @@
-//import * as React from 'react';
-
 declare module DurationPicker {
   interface Duration {
-    hours: number;
+    hours?: number;
     minutes: number;
     seconds: number;
   }
@@ -11,6 +9,7 @@ declare module DurationPicker {
     maxHours?: number;
     initialDuration?: DurationPicker.Duration;
     onChange?: (duration: DurationPicker.Duration) => void;
+    noHours?: boolean;
   }
 }
 
